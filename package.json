@@ -1,0 +1,25 @@
+{
+  "name": "recbook",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NazarElf/RecBook.git"
+  },
+  "keywords": [
+    "Recipe"
+  ],
+  "author": "Nazar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NazarElf/RecBook/issues"
+  },
+  "homepage": "https://github.com/NazarElf/RecBook#readme",
+  "dependencies": {
+    "react": "^18.2.0"
+  }
+}
