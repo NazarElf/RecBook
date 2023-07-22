@@ -18,8 +18,5 @@
   "bugs": {
     "url": "https://github.com/NazarElf/RecBook/issues"
   },
-  "homepage": "https://github.com/NazarElf/RecBook#readme",
-  "dependencies": {
-    "react": "^18.2.0"
-  }
+  "homepage": "https://github.com/NazarElf/RecBook#readme"
 }
