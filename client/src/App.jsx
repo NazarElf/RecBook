@@ -4,12 +4,14 @@ import CreateRecipeForm from "./components/CreateRecipeForm/CreateRecipeForm";
 import { useDispatch } from "react-redux";
 
 import { getRecipes } from "./actions/recipes";
+import { getIngridients } from "./actions/ingridients";
 import './App.css'
 
 const App = () => {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(getRecipes());
+        dispatch(getIngridients());
     }, [dispatch])
     return (
         <div>
