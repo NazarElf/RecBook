@@ -4,10 +4,12 @@ import bodyParser from 'body-parser'
 import mongoose from 'mongoose'
 
 import recipesRouter from './routes/recipes.js'
+import productsRouter from './routes/products.js'
 
 const app = express();
 
 app.use('/recipes', recipesRouter)
+app.use('/products', productsRouter)
 
 app.use(bodyParser.json({ limit: "30mb", extended: true}))
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true}))
