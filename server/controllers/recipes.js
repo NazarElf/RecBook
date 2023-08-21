@@ -3,7 +3,12 @@ import Recipe from '../models/recipe.js'
 export const getRecipes = async (req, res) =>
 {
     try {
-        const recipes = await Recipe.find()
+        //const recipes = await Recipe.find()
+        const recipes = await Recipe.aggregate([
+            {$lookup: {from: 'ingridients', localField: 'ingridients', foreignField: 'id', as: 'ingridients'}}
+        ])
+
+        //console.log(recipes);
 
         res.status(200).json(recipes)
     } catch (error) {

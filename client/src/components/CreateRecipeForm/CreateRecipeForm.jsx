@@ -9,7 +9,7 @@ function getRandomInt(max) {
 
 const CreateRecipeForm = () => {
     const [recipeData, setRecipeData] = useState({
-        name: '', order: '', picture: '', ingridiets: ''
+        name: '', order: '', picture: '', ingridients: ''
     })
     const dispatch = useDispatch()
 
@@ -19,7 +19,7 @@ const CreateRecipeForm = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const recipeToSend = {...recipeData}
-        recipeToSend.ingridiets = [1,2]
+        recipeToSend.ingridients = [1,2]
         
         console.log("sending recipe: ",recipeToSend)
 
