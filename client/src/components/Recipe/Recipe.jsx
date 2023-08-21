@@ -1,9 +1,10 @@
 import React from 'react';
 
-const Recipe = () => 
-{
+const Recipe = () => {
     return (
-        <h1>Recipe</h1>
+        <div>
+            <h1>Recipe</h1>
+        </div>
     )
 }
 

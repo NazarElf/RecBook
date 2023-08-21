@@ -1,6 +1,7 @@
 import React from "react";
 import Recipes from './components/Recipes/Recipes'
 import CreateRecipeForm from "./components/CreateRecipeForm/CreateRecipeForm";
+import './App.css'
 
 const App = () => 
 {

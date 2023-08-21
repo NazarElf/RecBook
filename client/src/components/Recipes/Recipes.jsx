@@ -1,14 +1,13 @@
 import React from 'react';
 import Recipe from '../Recipe/Recipe';
 
-const Recipes = () => 
-{
+const Recipes = () => {
     return (
-        <>
-        <h1>RECIPES</h1>
-        <Recipe/>
-        <Recipe/>
-        </>
+        <div>
+            <h1>RECIPES</h1>
+            <Recipe />
+            <Recipe />
+        </div>
     )
 }
 

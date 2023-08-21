@@ -1,9 +1,10 @@
 import React from 'react';
 
-const CreateRecipeForm = () => 
-{
+const CreateRecipeForm = () => {
     return (
-        <h1>Create Recipe Form</h1>
+        <div>
+            <h1>Create Recipe Form</h1>
+        </div>
     )
 }
 
