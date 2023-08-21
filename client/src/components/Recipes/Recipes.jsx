@@ -5,8 +5,10 @@ import { useSelector } from 'react-redux';
 
 const Recipes = () => {
     const recipes = useSelector((state) => state.recipes)
+    const ingridients = useSelector((state) => state.ingridients)
 
-    console.log(recipes);
+    console.log("recipes: ", recipes);
+    console.log("ingridients: ", ingridients);
 
     return (
         <div>

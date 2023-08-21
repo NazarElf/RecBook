@@ -1,4 +1,5 @@
 import { combineReducers } from "redux";
 import recipes from './recipes';
+import ingridients from "./ingridients";
 
-export default combineReducers({ recipes })
+export default combineReducers({ recipes, ingridients })
