@@ -1,13 +1,13 @@
-const recipes = (state = [], action) =>
+const recipes = (recipes = [], action) =>
 {
     switch(action.type)
     {
         case 'FETCH_ALL':
             return action.payload;
         case 'CREATE':
-            return state;
+            return [...recipes, action.payload];
         default:
-            return state;
+            return recipes;
     }
 }
 

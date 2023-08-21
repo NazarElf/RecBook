@@ -3,9 +3,9 @@ import mongoose from "mongoose";
 const recipeSchema = mongoose.Schema(
     {
         name: String,
-        orderOfCreation: String,
+        order: String,
         picture: String,
-        products:
+        ingridiets:
         {
             type: [
                 {
