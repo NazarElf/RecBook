@@ -1,6 +1,6 @@
-import Product from '../models/product.js'
+import Product from '../models/ingridients.js'
 
-export const getProducts = async (req, res) => 
+export const getIngridient = async (req, res) => 
 {
     try {
         const products = await Product.find();
@@ -13,7 +13,7 @@ export const getProducts = async (req, res) =>
     }
 }
 
-export const createProduct = async (req, res) => 
+export const createIngridient = async (req, res) => 
 {
     const product = req.body
 

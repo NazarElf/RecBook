@@ -1,11 +1,11 @@
 import express from 'express'
 import { getRecipes, createRecipe } from '../controllers/recipes.js'
-import { createProduct } from '../controllers/products.js'
+import { createIngridient } from '../controllers/ingridients.js'
 
-const router = express.Router();
+const recipesRouter = express.Router();
 
-router.get('/', getRecipes);
-router.post('/create_recipe', createRecipe);
-router.post('/create_product', createProduct)
+recipesRouter.get('/', getRecipes);
+recipesRouter.post('/create_recipe', createRecipe);
+recipesRouter.post('/create_product', createIngridient)
 
-export default router;
+export default recipesRouter;
