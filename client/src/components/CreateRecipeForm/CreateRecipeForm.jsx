@@ -10,6 +10,7 @@ const CreateRecipeForm = () => {
     const dispatch = useDispatch()
 
     const handleClear = (e) => {
+        console.log(recipeData)
         e.preventDefault();
         setRecipeData(defaultState)
     }
@@ -24,6 +25,7 @@ const CreateRecipeForm = () => {
 
 
         dispatch(createRecipe(recipeToSend))
+        handleClear(e)
     }
 
     return (
@@ -45,7 +47,7 @@ const CreateRecipeForm = () => {
                 <h4>Upload Image:</h4>
                 <div>
                     <FileBase
-                        type="file"
+                        type="image"
                         multiple={false}
                         onDone={({ base64 }) => setRecipeData({ ...recipeData, picture: base64 })}
                     />
