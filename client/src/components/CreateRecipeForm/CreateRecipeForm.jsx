@@ -19,7 +19,7 @@ const CreateRecipeForm = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const recipeToSend = {...recipeData}
-        recipeToSend.ingridients = [1,2]
+        recipeToSend.ingridients = [{id:1, quantity:0.5, muType:"kilo"}]
         
         console.log("sending recipe: ",recipeToSend)
 

@@ -1,19 +1,19 @@
 import React from 'react';
 
-const Recipe = (prop) => {
+const Recipe = ({ingridients, picture, name, order}) => {
 
-    const listOfIngridients = prop.ingridients.map(ing => {
-        return <li>{ing.name}</li>
+    const listOfIngridients = ingridients.map((ing, i) => {
+        return <li key={i}>{ing.name}</li>
     })
 
     return (
         <div>
-            <h1>Recipe of {prop.name}</h1>
-            <img src={prop.picture}/>
+            <h1>Recipe of {name}</h1>
+            <img src={picture}/>
             <ul>
                 {listOfIngridients}
             </ul>
-            <p>{prop.order}</p>
+            <p>{order}</p>
         </div>
     )
 }

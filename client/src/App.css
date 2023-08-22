@@ -2,3 +2,8 @@ div {
     border: 3px solid black;
     margin: 3px;
 }
+
+img{
+    border: 3px solid gray;
+    border-radius: 15px;
+}
