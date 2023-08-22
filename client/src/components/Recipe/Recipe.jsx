@@ -9,7 +9,7 @@ const Recipe = ({ingridients, picture, name, order}) => {
     return (
         <div>
             <h1>Recipe of {name}</h1>
-            <img src={picture}/>
+            <div className='blured-image' style={{backgroundImage: `url(${picture})`}} src={picture}/>
             <ul>
                 {listOfIngridients}
             </ul>
