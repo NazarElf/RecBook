@@ -9,8 +9,18 @@ const recipeSchema = mongoose.Schema(
         {
             type: [
                 {
-                    type: Number, //Id of ingridient
-                }
+                    id: Number, //Id of ingridient
+                    muType:
+                    {
+                        type: String,
+                        default: "kilo"
+                    },
+                    quantity:
+                    {
+                        type:Number,
+                        default: 0.5,
+                    }
+                },
             ],
             default: [],
         },

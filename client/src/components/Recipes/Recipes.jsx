@@ -8,11 +8,6 @@ const Recipes = () => {
     const ingridients = useSelector((state) => state.ingridients)
     
 
-    /*console.log("recipe[0]: ", recipes[0]);
-    console.log("ingridients: ", ingridients);*/
-    const recipe = recipes[0]
-    console.log(recipe)
-
     return (
         <div>
             <h1>RECIPES</h1>

@@ -6,8 +6,6 @@ const Recipe = (prop) => {
         return <li>{ing.name}</li>
     })
 
-    console.log(prop.ingridients)
-
     return (
         <div>
             <h1>Recipe of {prop.name}</h1>
