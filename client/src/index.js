@@ -1,8 +1,16 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { Provider } from "react-redux";
+import { createRoot } from 'react-dom/client'
+
+import reducers from './reducers'
+
 
 import App from './App'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-ReactDOM.render(<App/>, document.getElementById('root'))
+const root = createRoot(document.getElementById('root'))
+root.render(
+<Provider store={reducers}>
+    <App />
+</Provider>)

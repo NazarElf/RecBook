@@ -1,11 +1,18 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { Navbar, Nav, Container, NavDropdown, Button, Offcanvas, Col, Row } from 'react-bootstrap';
 import Recipes from "./components/Recipes/Recipes";
 import Form from "./components/Form/Form";
+import { useDispatch } from "react-redux";
+
+
+import {getRecipes} from './actions/recipes'
 //import AppHeader from "./components/NavBar/AppHeader";
 
-
 const App = () => {
+    const dispatch = useDispatch();
+    useEffect(() =>{
+        dispatch(getRecipes());
+    }, [dispatch])
     return (
         <>
             <Navbar expand="lg" className="bg-body-tertiary">
