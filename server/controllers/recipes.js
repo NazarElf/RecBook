@@ -5,7 +5,7 @@ import Recipe from "../models/recipeMessage.js";
 export const getRecipes = (req, res) => {
     //res.send("THIS WORKS!!!")
     let a;
-    connection.query('SELECT * FROM recipe;',
+    connection.query('SELECT recipe_id as id, name, description, cooking_order, recipe_type_id as typeID FROM recipe;',
     function (error, results, fields) {
         if(error)
         {
@@ -24,6 +24,8 @@ export const createRecipe = (req, res) => {
     const recipe = req.body;
 
     const newRecipe = new Recipe(recipe.name, recipe.description, recipe.order, recipe.typeID, recipe.creatorID);
+    console.log(recipe)
+    console.log(newRecipe)
 
     connection.query('INSERT INTO `Recipe` SET ?', newRecipe, 
     function(error, results, fields)
