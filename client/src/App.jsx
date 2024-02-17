@@ -2,17 +2,17 @@ import React, {useEffect} from "react";
 import { Navbar, Nav, Container, NavDropdown, Button, Offcanvas, Col, Row } from 'react-bootstrap';
 import Recipes from "./components/Recipes/Recipes";
 import Form from "./components/Form/Form";
-import { useDispatch } from "react-redux";
+import useRecipesStore from "./stores/recipes";
 
 
-import {getRecipes} from './actions/recipes'
+//import {getRecipes} from './actions/recipes'
 //import AppHeader from "./components/NavBar/AppHeader";
 
 const App = () => {
-    const dispatch = useDispatch();
+    const fetchAllRecipes = useRecipesStore(state => state.fetchAllRecipes)
     useEffect(() =>{
-        dispatch(getRecipes());
-    }, [dispatch])
+        fetchAllRecipes()
+    }, [])
     return (
         <>
             <Navbar expand="md" className="bg-body-tertiary">

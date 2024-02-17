@@ -1,10 +1,11 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import Recipe from "./Recipe";
 import { Col, Row, Button, Container, Spinner } from "react-bootstrap";
+import useRecipesStore from "../../stores/recipes";
 
 const Recipes = () => {
-    const recipes = useSelector((state) => state.recipes)
+    //const recipes = useSelector((state) => state.recipes)
+    const recipes = useRecipesStore((state) => state.recipes)
 
     return (
         <Container className="my-3">

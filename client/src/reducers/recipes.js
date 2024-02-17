@@ -1,4 +1,4 @@
-export default (recipes = [], action) =>
+const recipes = (recipes = [], action) =>
 {
     switch(action.type)
     {
@@ -10,3 +10,4 @@ export default (recipes = [], action) =>
             return recipes;
     }
 }
+export default recipes;

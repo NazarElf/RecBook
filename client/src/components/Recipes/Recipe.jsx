@@ -2,12 +2,13 @@ import React from "react";
 import { Button, Card, Dropdown } from "react-bootstrap";
 
 import {CustomToggle} from  '../CustomComponents'
+import useRecipesStore from "../../stores/recipes";
 import './recipe.css'
 
 const Recipe = ({ recipe }) => {
     console.log(recipe)
     const type = (() => {
-        switch (recipe.typeID) {
+        switch (recipe.recipe_type_id) {
             case 1: return "Desserts"
             case 2: return "Starters"
             case 3: return "Snacks"
@@ -16,6 +17,14 @@ const Recipe = ({ recipe }) => {
             default: return false
         }
     })()
+
+    const removeRecipe = useRecipesStore(state => state.removeRecipe)
+
+    const onClick = () =>
+    {
+        removeRecipe(recipe.id)
+    }
+
     return (
         <Card >
             <Card.Body>
@@ -26,7 +35,7 @@ const Recipe = ({ recipe }) => {
                         </Dropdown.Toggle>
                         <Dropdown.Menu className="dropdown-animate">
                             <Dropdown.Item as={Button}><i className="bi bi-pencil"></i>{' '}Modify</Dropdown.Item>
-                            <Dropdown.Item as={Button} className="btn-outline-danger text-danger danger-active"><i className="bi bi-trash"></i>{' '}Remove</Dropdown.Item>
+                            <Dropdown.Item as={Button} onClick={onClick} className="btn-outline-danger text-danger danger-active"><i className="bi bi-trash"></i>{' '}Remove</Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
                 </Card.Title>

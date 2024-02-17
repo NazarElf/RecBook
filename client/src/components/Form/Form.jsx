@@ -1,15 +1,15 @@
 //import  from "react";
 import React, { useState } from "react";
 import { Form, FloatingLabel, Button, Row, Col, Card } from 'react-bootstrap';
-import { useDispatch } from "react-redux";
-import { createRecipe } from "../../actions/recipes";
+//import { createRecipe } from "../../actions/recipes";
+import useRecipesStore from "../../stores/recipes";
 
 const MyForm = () => {
     const [validated, setValidated] = useState(false);
 
-    const [recipe, setRecipe] = useState({name: "", description: "", order: "", typeID: ""})
+    const [recipe, setRecipe] = useState({ name: "", description: "", order: "", typeID: "" })
 
-    const dispatch = useDispatch()
+    const createRecipe = useRecipesStore(state => state.createRecipe)
 
     const handleSubmit = (event) => {
         const form = event.currentTarget;
@@ -18,14 +18,14 @@ const MyForm = () => {
             event.stopPropagation();
         }
         setValidated(true);
-        if(validated)
-        {
-            dispatch(createRecipe(recipe))
+        if (validated) {
+            var sendRecipe = {...recipe, typeID: Number(recipe.typeID)}
+            createRecipe(sendRecipe)
         }
     }
 
     const onClear = () => {
-        setRecipe({name: "", description: "", order: "", typeID: ""})
+        setRecipe({ name: "", description: "", order: "", typeID: "" })
     }
 
     return (
@@ -34,21 +34,21 @@ const MyForm = () => {
             <Card.Body>
                 <Form noValidate validated={validated} onSubmit={handleSubmit} >
                     <FloatingLabel controlId="Name" label="Recipe Name" className="mb-3">
-                        <Form.Control type="text" placeholder="" autoComplete="off" required value={recipe.name} onInput={(e) => { setRecipe({...recipe, name: e.target.value}) }} />
+                        <Form.Control type="text" placeholder="" autoComplete="off" required value={recipe.name} onInput={(e) => { setRecipe({ ...recipe, name: e.target.value }) }} />
                         <Form.Control.Feedback type="invalid">Name for recipe is necesary</Form.Control.Feedback>
                     </FloatingLabel>
                     <FloatingLabel controlId="Description" label="Recipe Description" className="mb-3">
                         <Form.Control as="textarea" placeholder=""
-                            style={{ height: '100px' }} required value={recipe.description} onInput={(e) => { setRecipe({...recipe, description: e.target.value}) }} />
+                            style={{ height: '100px' }} required value={recipe.description} onInput={(e) => { setRecipe({ ...recipe, description: e.target.value }) }} />
                         <Form.Control.Feedback type="invalid">Input short description of recipe</Form.Control.Feedback>
                     </FloatingLabel>
                     <FloatingLabel controlId="Cooking_Order" label="Cooking Order" className="mb-3">
                         <Form.Control as="textarea" placeholder=""
-                            style={{ height: '100px' }} required value={recipe.order} onInput={(e) => { setRecipe({...recipe, order: e.target.value}) }} />
+                            style={{ height: '100px' }} required value={recipe.order} onInput={(e) => { setRecipe({ ...recipe, order: e.target.value }) }} />
                         <Form.Control.Feedback type="invalid">Specify Cooking order</Form.Control.Feedback>
                     </FloatingLabel>
                     <FloatingLabel controlId="Recipe_Type_ID" label="Choose recipe type" className="mb-3">
-                        <Form.Select required value={recipe.typeID} onInput={e => { setRecipe({...recipe, typeID:e.target.value}) }}>
+                        <Form.Select required value={recipe.typeID} onInput={e => { setRecipe({ ...recipe, typeID: e.target.value }) }}>
                             <option>--Select recipe type--</option>
                             <option value="1">Desserts</option>
                             <option value="2">Starters</option>
