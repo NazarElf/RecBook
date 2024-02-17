@@ -1,6 +1,7 @@
 import React from "react";
-import { Card, Button } from "react-bootstrap";
+import { Button, Card, Dropdown } from "react-bootstrap";
 
+import {CustomToggle} from  '../CustomComponents'
 import './recipe.css'
 
 const Recipe = ({ recipe }) => {
@@ -20,13 +21,19 @@ const Recipe = ({ recipe }) => {
             <Card.Body>
                 <Card.Title className="d-flex justify-content-between align-items-center">
                     {recipe.name}
-                    <button><i class="bi bi-three-dots"></i></button>
+                    <Dropdown align={{xs:'start'}}>
+                        <Dropdown.Toggle as={CustomToggle} id="dropdown-basic">
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu className="dropdown-animate">
+                            <Dropdown.Item as={Button}><i className="bi bi-pencil"></i>{' '}Modify</Dropdown.Item>
+                            <Dropdown.Item as={Button} className="btn-outline-danger text-danger danger-active"><i className="bi bi-trash"></i>{' '}Remove</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
                 </Card.Title>
                 <Card.Subtitle className="font-weight-light">{type}</Card.Subtitle>
                 <Card.Text>
                     {recipe.description}
                 </Card.Text>
-                <Button size="sm" variant="outline-danger"><i className="bi bi-trash"></i></Button>
             </Card.Body>
         </Card>
     )
