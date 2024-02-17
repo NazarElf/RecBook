@@ -3,10 +3,9 @@ import '../models/recipeMessage.js'
 import Recipe from "../models/recipeMessage.js";
 
 export const getRecipes = (req, res) => {
-    //res.send("THIS WORKS!!!")
     let a;
     connection.query('SELECT recipe_id as id, name, description, cooking_order, recipe_type_id as typeID FROM recipe;',
-    function (error, results, fields) {
+    async function (error, results, fields) {
         if(error)
         {
             res.status(404).json({message: error.message})
@@ -36,7 +35,18 @@ export const createRecipe = (req, res) => {
         }
         else
         {
-            res.status(201).json({message: newRecipe})
+            res.status(201).json( newRecipe)
         }
     })
+}
+
+export const updateRecipe = (req,res) =>
+{
+    const {id: _id} = req.params;
+    const recipe = req.body;
+    const updateRecipe = new Recipe(recipe.name, recipe.description, recipe.order, recipe.typeID, recipe.creatorID);
+
+    var q = connection.query('UPDATE `Recipe` SET modified = ? WHERE id = ?', updateRecipe)
+    console.log(q)
+    res.status(501).json({message: updateRecipe});
 }
