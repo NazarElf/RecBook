@@ -4,7 +4,7 @@ import Recipe from "../models/recipeMessage.js";
 
 export const getRecipes = (req, res) => {
     let a;
-    connection.query('SELECT recipe_id as id, name, description, cooking_order, recipe_type_id as typeID FROM recipe;',
+    connection.query('SELECT recipe_id as id, name, description, cooking_order, recipe_type_id FROM recipe;',
     async function (error, results, fields) {
         if(error)
         {
@@ -13,6 +13,7 @@ export const getRecipes = (req, res) => {
         }
         else
         {
+            console.log(results)
             res.status(200).send(results)
         }
     })
@@ -29,13 +30,14 @@ export const createRecipe = (req, res) => {
     connection.query('INSERT INTO `Recipe` SET ?', newRecipe, 
     function(error, results, fields)
     {
+        console.log(results)
         if(error)
         {
             res.status(409).json({message: error.message})
         }
         else
         {
-            res.status(201).json( newRecipe)
+            res.status(201).json({...newRecipe, id: results.insertId})
         }
     })
 }
@@ -49,4 +51,31 @@ export const updateRecipe = (req,res) =>
     var q = connection.query('UPDATE `Recipe` SET modified = ? WHERE id = ?', updateRecipe)
     console.log(q)
     res.status(501).json({message: updateRecipe});
+}
+
+export const deleteRecipe = (req,res)=>
+{
+    console.log(req.params)
+    const {id: _id} = (req.params);
+    console.log(_id, ' ', connection.escape(_id))
+    connection.query('DELETE FROM `Recipe` WHERE Recipe_ID = ' + connection.escape(_id), 
+    function(error, results, fields)
+    {
+        console.log('results:')
+        console.log(results)
+        console.log('error:')
+        console.log(error)
+        if(error)
+        {
+            res.status(400).json({message: error.message})
+            return
+        }
+        else
+        {
+            res.status(200).json({message: `deleted with id ${_id}`})
+            return
+        }
+    })
+    //console.log(q)
+    //res.status(501).json({message: _id})
 }
