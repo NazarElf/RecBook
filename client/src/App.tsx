@@ -1,8 +1,8 @@
 import React, {useEffect} from "react";
 import { Navbar, Nav, Container, NavDropdown, Button, Offcanvas, Col, Row } from 'react-bootstrap';
-import Recipes from "./components/Recipes/Recipes";
-import Form from "./components/Form/Form";
-import useRecipesStore from "./stores/recipes";
+import Recipes from "./components/Recipes/Recipes.tsx";
+import Form from "./components/Form/Form.tsx";
+import useRecipesStore from "./stores/recipes.ts";
 
 
 //import {getRecipes} from './actions/recipes'

@@ -1,7 +1,7 @@
 import React from "react";
-import Recipe from "./Recipe";
+import Recipe from "./Recipe.tsx";
 import { Col, Row, Button, Container, Spinner } from "react-bootstrap";
-import useRecipesStore from "../../stores/recipes";
+import useRecipesStore from "../../stores/recipes.ts";
 
 const Recipes = () => {
     //const recipes = useSelector((state) => state.recipes)
