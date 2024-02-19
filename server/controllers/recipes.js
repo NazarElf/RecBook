@@ -3,7 +3,6 @@ import '../models/recipeMessage.js'
 import Recipe from "../models/recipeMessage.js";
 
 export const getRecipes = (req, res) => {
-    let a;
     connection.query('SELECT recipe_id as id, name, description, cooking_order, recipe_type_id FROM recipe;',
         async function (error, results, fields) {
             if (error) {
@@ -11,7 +10,6 @@ export const getRecipes = (req, res) => {
                 console.log(error)
             }
             else {
-                console.log(results)
                 res.status(200).send(results)
             }
         })
@@ -22,9 +20,6 @@ export const createRecipe = (req, res) => {
     const recipe = req.body;
 
     const newRecipe = new Recipe(recipe.name, recipe.description, recipe.cooking_order, recipe.typeID, recipe.creatorID);
-    console.log(recipe)
-    console.log(newRecipe)
-
     connection.query('INSERT INTO `Recipe` SET ?', newRecipe,
         function (error, results, fields) {
             console.log(results)
@@ -48,15 +43,9 @@ export const updateRecipe = (req, res) => {
 }
 
 export const deleteRecipe = (req, res) => {
-    console.log(req.params)
     const { id: _id } = (req.params);
-    console.log(_id, ' ', connection.escape(_id))
     connection.query('DELETE FROM `Recipe` WHERE Recipe_ID = ' + connection.escape(_id),
         function (error, results, fields) {
-            console.log('results:')
-            console.log(results)
-            console.log('error:')
-            console.log(error)
             if (error) {
                 res.status(400).json({ message: error.message })
                 return
@@ -66,6 +55,4 @@ export const deleteRecipe = (req, res) => {
                 return
             }
         })
-    //console.log(q)
-    //res.status(501).json({message: _id})
 }
