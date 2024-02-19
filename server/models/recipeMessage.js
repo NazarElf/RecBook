@@ -1,7 +1,5 @@
-class Recipe
-{
-    constructor(name, description, order, typeID, creatorID)
-    {
+class Recipe {
+    constructor(name, description, order, typeID, creatorID) {
         this.name = name;
         this.description = description;
         this.cooking_order = order;

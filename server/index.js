@@ -1,6 +1,5 @@
 import express from "express";
 import bodyParser from "body-parser";
-import * as mysql from 'mysql2';
 import cors from 'cors';
 import { connection } from "./sql_connection.js";
 
@@ -23,6 +22,3 @@ connection.connect(function(err){
 
 
 app.listen(PORT, () => {console.log(`Server running on port: ${PORT}`)})
-
-
-//connection.end();

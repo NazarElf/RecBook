@@ -5,77 +5,67 @@ import Recipe from "../models/recipeMessage.js";
 export const getRecipes = (req, res) => {
     let a;
     connection.query('SELECT recipe_id as id, name, description, cooking_order, recipe_type_id FROM recipe;',
-    async function (error, results, fields) {
-        if(error)
-        {
-            res.status(404).json({message: error.message})
-            console.log(error)
-        }
-        else
-        {
-            console.log(results)
-            res.status(200).send(results)
-        }
-    })
+        async function (error, results, fields) {
+            if (error) {
+                res.status(404).json({ message: error.message })
+                console.log(error)
+            }
+            else {
+                console.log(results)
+                res.status(200).send(results)
+            }
+        })
 }
 
 
 export const createRecipe = (req, res) => {
     const recipe = req.body;
 
-    const newRecipe = new Recipe(recipe.name, recipe.description, recipe.order, recipe.typeID, recipe.creatorID);
+    const newRecipe = new Recipe(recipe.name, recipe.description, recipe.cooking_order, recipe.typeID, recipe.creatorID);
     console.log(recipe)
     console.log(newRecipe)
 
-    connection.query('INSERT INTO `Recipe` SET ?', newRecipe, 
-    function(error, results, fields)
-    {
-        console.log(results)
-        if(error)
-        {
-            res.status(409).json({message: error.message})
-        }
-        else
-        {
-            res.status(201).json({...newRecipe, id: results.insertId})
-        }
-    })
+    connection.query('INSERT INTO `Recipe` SET ?', newRecipe,
+        function (error, results, fields) {
+            console.log(results)
+            if (error) {
+                res.status(409).json({ message: error.message })
+            }
+            else {
+                res.status(201).json({ ...newRecipe, id: results.insertId })
+            }
+        })
 }
 
-export const updateRecipe = (req,res) =>
-{
-    const {id: _id} = req.params;
+export const updateRecipe = (req, res) => {
+    const { id: _id } = req.params;
     const recipe = req.body;
     const updateRecipe = new Recipe(recipe.name, recipe.description, recipe.order, recipe.typeID, recipe.creatorID);
 
     var q = connection.query('UPDATE `Recipe` SET modified = ? WHERE id = ?', updateRecipe)
     console.log(q)
-    res.status(501).json({message: updateRecipe});
+    res.status(501).json({ message: updateRecipe });
 }
 
-export const deleteRecipe = (req,res)=>
-{
+export const deleteRecipe = (req, res) => {
     console.log(req.params)
-    const {id: _id} = (req.params);
+    const { id: _id } = (req.params);
     console.log(_id, ' ', connection.escape(_id))
-    connection.query('DELETE FROM `Recipe` WHERE Recipe_ID = ' + connection.escape(_id), 
-    function(error, results, fields)
-    {
-        console.log('results:')
-        console.log(results)
-        console.log('error:')
-        console.log(error)
-        if(error)
-        {
-            res.status(400).json({message: error.message})
-            return
-        }
-        else
-        {
-            res.status(200).json({message: `deleted with id ${_id}`})
-            return
-        }
-    })
+    connection.query('DELETE FROM `Recipe` WHERE Recipe_ID = ' + connection.escape(_id),
+        function (error, results, fields) {
+            console.log('results:')
+            console.log(results)
+            console.log('error:')
+            console.log(error)
+            if (error) {
+                res.status(400).json({ message: error.message })
+                return
+            }
+            else {
+                res.status(200).json({ message: `deleted with id ${_id}` })
+                return
+            }
+        })
     //console.log(q)
     //res.status(501).json({message: _id})
 }
