@@ -16,7 +16,7 @@ export const getRecipes = (req, res) => {
 }
 
 
-export const createRecipe = (req, res) => {
+export const createRecipe = async (req, res) => {
     const recipe = req.body;
 
     const newRecipe = new Recipe(recipe.name, recipe.description, recipe.cooking_order, recipe.typeID, recipe.creatorID);
@@ -54,5 +54,23 @@ export const deleteRecipe = (req, res) => {
                 res.status(200).json({ message: `deleted with id ${_id}` })
                 return
             }
+        })
+}
+
+export const fetchOneRecipe = (req, res) => {
+    const { id: _id } = req.params;
+    connection.query('SELECT recipe_id as id, name, description, cooking_order, recipe_type_id FROM `Recipe` WHERE Recipe_ID = ?', _id,
+        function (error, results, fields) {
+            if (error) {
+                console.log(error)
+                res.status(400).json({ message: error.message })
+                return
+            }
+            console.log(results[0])
+            if (!results.length) {
+                res.status(404).json({ message: "Specific recipe not found" })
+                return
+            }
+            res.status(200).json(results[0])
         })
 }
