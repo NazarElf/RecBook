@@ -6,6 +6,7 @@ import useRecipesStore from "../../stores/recipes.ts";
 import './recipe.css'
 
 import type { Recipe } from "../../interfaces/dataTypes.ts";
+import { useNavigate } from "react-router-dom";
 
 export interface RecipeProps {
     recipe: Recipe
@@ -31,8 +32,10 @@ const RecipeCard: FC<RecipeProps> = ({ recipe }) => {
             removeRecipe(recipe.id)
     }
 
+    const navigate = useNavigate()
+
     return (
-        <Card >
+        <Card style={{cursor: 'pointer'}} onClick={() => navigate(`/recipes/${recipe.id}`)}>
             <Card.Body>
                 <Card.Title className="d-flex justify-content-between align-items-center">
                     {recipe.name}

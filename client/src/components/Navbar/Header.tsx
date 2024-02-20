@@ -9,7 +9,7 @@ const Header: FC = () => {
         <>
             <Navbar key="md" expand="md" className="bg-body-tertiary" onToggle={() => setExpanded(state => !state)} expanded={expanded}>
                 <Container fluid>
-                    <Navbar.Brand>
+                    <Navbar.Brand onClick={() => {navigate('/'); setExpanded(false)}}>
                         <img
                             src="/RecBook.svg" // Replace with your logo path
                             alt="Logo"
