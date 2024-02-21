@@ -1,22 +1,39 @@
 //import  from "react";
-import React, { useEffect, useState } from "react";
-import { Form, FloatingLabel, Button, Row, Col, Card, Spinner, Container } from 'react-bootstrap';
-//import { createRecipe } from "../../actions/recipes";
-import useRecipesStore from "../../stores/recipes.ts";
+import React, { useState } from "react";
+import { Form, FloatingLabel, Button, Row, Col, Card, } from 'react-bootstrap';
 
 import type { Recipe } from "../../interfaces/dataTypes.ts";
+import { redirect, useLoaderData, useNavigate, useSubmit } from "react-router-dom";
+import { createRecipe, fetchOneRecipe, updateRecipe } from "../../api/index.ts";
+
+export async function loader({ params }) {
+    const { data: recipe } = await fetchOneRecipe(params.id)
+    return recipe;
+}
+
+export async function action({ request, params }) {
+    const formData = await request.formData();
+    const recipe: Recipe = Object.fromEntries(formData)
+
+    if (!params.id) {
+        const { data: { id } } = await createRecipe(recipe)
+        return redirect(`/recipes/${id}`)
+    }
+    await updateRecipe(params.id, recipe)
+    return redirect(`/recipes/${params.id}`)
+}
 
 const MyForm = () => {
     const [validated, setValidated] = useState(false);
 
-    const [recipe, setRecipe] = useState<Recipe>({ name: "", description: "", cooking_order: "", recipe_type_id: 0 })
+    const navigate = useNavigate()
 
-    const createRecipe = useRecipesStore(state => state.createRecipe)
+    /* @ts-ignore */
+    const data: Recipe = useLoaderData()
 
-    const isProcessing = useRecipesStore(state => state.isProcessing)
+    const [recipe, setRecipe] = useState<Recipe>(data || { name: "", description: "", cooking_order: "", recipe_type_id: 0 })
 
-    useEffect(() => {
-    }, [isProcessing, createRecipe])
+    const submit = useSubmit()
 
     const handleSubmit = (event) => {
         const form = event.currentTarget;
@@ -25,11 +42,8 @@ const MyForm = () => {
 
         setValidated(true)
         form.checkValidity()
-        console.log(recipe)
         if (recipe.name && recipe.description && recipe.cooking_order && recipe.recipe_type_id && recipe.recipe_type_id > 0) {
-            var sendRecipe = recipe
-            createRecipe(sendRecipe)
-            onClear()
+            submit(recipe, { method: "POST" })
         }
         else {
             event.stopPropagation()
@@ -37,9 +51,8 @@ const MyForm = () => {
 
     }
 
-    const onClear = () => {
-        setRecipe({ name: "", description: "", cooking_order: "", recipe_type_id: 0 })
-        setValidated(false)
+    const onBack = () => {
+        navigate(-1)
     }
 
     return (
@@ -78,21 +91,12 @@ const MyForm = () => {
                                 <Button variant="primary" type="submit" style={{ width: "100%" }}>Submit</Button>
                             </Col>
                             <Col>
-                                <Button variant="outline-primary" style={{ width: "100%" }} onClick={onClear}>Clear</Button>
+                                <Button variant="outline-primary" style={{ width: "100%" }} onClick={onBack}>Go Back</Button>
                             </Col>
                         </Row>
                     </Form>
                 </Card.Body>
             </Card>
-            {isProcessing &&
-                <Container >
-                    <Row className="justify-content-center">
-                        <Col xs="auto">
-                            <Spinner />
-                        </Col>
-                    </Row>
-
-                </Container>}
         </>
     )
 }

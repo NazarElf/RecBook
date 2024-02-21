@@ -19,11 +19,13 @@ export const getRecipes = (req, res) => {
 export const createRecipe = async (req, res) => {
     const recipe = req.body;
 
-    const newRecipe = new Recipe(recipe.name, recipe.description, recipe.cooking_order, recipe.typeID, recipe.creatorID);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    const newRecipe = new Recipe(recipe.name, recipe.description, recipe.cooking_order, recipe.recipe_type_id, recipe.creatorID);
     connection.query('INSERT INTO `Recipe` SET ?', newRecipe,
         function (error, results, fields) {
-            console.log(results)
             if (error) {
+                console.log(error)
                 res.status(409).json({ message: error.message })
             }
             else {
@@ -35,11 +37,20 @@ export const createRecipe = async (req, res) => {
 export const updateRecipe = (req, res) => {
     const { id: _id } = req.params;
     const recipe = req.body;
-    const updateRecipe = new Recipe(recipe.name, recipe.description, recipe.order, recipe.typeID, recipe.creatorID);
+    const updateRecipe = new Recipe(recipe.name, recipe.description, recipe.cooking_order, recipe.recipe_type_id, recipe.creatorID);
 
-    var q = connection.query('UPDATE `Recipe` SET modified = ? WHERE id = ?', updateRecipe)
-    console.log(q)
-    res.status(501).json({ message: updateRecipe });
+    connection.query('UPDATE `Recipe` SET ? WHERE recipe_id = ?', [updateRecipe, _id],
+        function (error, results, fields) {
+            console.log("quering")
+            if (error) {
+                console.log(error)
+                res.status(400).json({ message: error.message })
+            }
+            else {
+                console.log(results, fields)
+                res.status(200).json({ message: "ok" })
+            }
+        })
 }
 
 export const deleteRecipe = (req, res) => {
@@ -66,7 +77,6 @@ export const fetchOneRecipe = (req, res) => {
                 res.status(400).json({ message: error.message })
                 return
             }
-            console.log(results[0])
             if (!results.length) {
                 res.status(404).json({ message: "Specific recipe not found" })
                 return

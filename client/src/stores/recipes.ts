@@ -6,6 +6,7 @@ import type { Recipe } from '../interfaces/dataTypes.ts'
 interface RecipesStore {
     isProcessing: boolean,
     recipe?: Recipe,
+    id?: number,
     recipes: Array<Recipe>,
     fetchAllRecipes(): any,
     createRecipe(recipe: Recipe): any,
@@ -18,6 +19,7 @@ const useRecipesStore = create<RecipesStore>((set, get) => ({
     isProcessing: false,
     recipes: [],
     recipe: undefined,
+    id: undefined,
     fetchAllRecipes: async () => {
         const { data } = await api.fetchRecipes();
         console.log(data)
@@ -26,12 +28,10 @@ const useRecipesStore = create<RecipesStore>((set, get) => ({
     createRecipe: async (recipe: Recipe) => {
         set({ isProcessing: true })
         const { data } = await api.createRecipe(recipe);
-        console.log("HERE IS DATA",data)
-        set(state => ({ recipes: [...state.recipes, data], isProcessing: false }))
+        set(state => ({ recipes: [...state.recipes, data], isProcessing: false, id: data.id }))
     },
     removeRecipe: async (id: number) => {
         await api.removeRecipe(id)
-        console.log('remove recipe with id = ', id)
         set(state => ({ recipes: state.recipes.filter(recipe => recipe.id !== id) }))
     },
     updateRecipe: async (id: number, recipe: Recipe) => {
@@ -40,6 +40,7 @@ const useRecipesStore = create<RecipesStore>((set, get) => ({
     },
     fetchOneRecipe: async (id: number) => 
     {
+        set(() => ({recipe: undefined, id: undefined}))
         const {data} = await api.fetchOneRecipe(id)
         set(() => ({recipe: data}))
     }

@@ -1,12 +1,14 @@
 import React, { StrictMode } from 'react'
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom'
 
-import RecipeDetails, {loader as detailsLoader} from './components/Recipes/RecipeDetails.tsx'
+import RecipeDetails, { loader as detailsLoader } from './components/Recipes/RecipeDetails.tsx'
 import ErrorPage from './components/Error/Error.tsx'
 import Header from './components/Navbar/Header.tsx'
-import App from './App.tsx'
+//import 
+import Recipes, { loader as recipesLoader } from './components/Recipes/Recipes.tsx'
 import './index.css'
-import MyForm from './components/Form/Form.tsx'
+import MyForm, { action as recipeFormAction, loader as recipeFormLoader } from './components/Form/Form.tsx'
+import { action as destroyAction } from './components/Recipes/RecipeDestroy.ts'
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -18,14 +20,24 @@ const router = createBrowserRouter(
                 <Route index element={<div><h1>Index</h1></div>} />
                 <Route
                     path='/recipes'
-                    element={<App />} />
+                    loader={recipesLoader}
+                    element={<Recipes />} />
                 <Route
                     path='/recipes/:id'
                     loader={detailsLoader}
                     element={<RecipeDetails />} />
                 <Route
+                    action={recipeFormAction}
                     path="/recipes/create"
                     element={<MyForm />} />
+                <Route
+                    path='/recipes/:id/modify'
+                    loader={recipeFormLoader}
+                    action={recipeFormAction}
+                    element={<MyForm />} />
+                <Route
+                    path='/recipes/:id/delete'
+                    action={destroyAction} />
             </Route>
         </Route>
     )

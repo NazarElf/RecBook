@@ -1,6 +1,5 @@
 import React from 'react'
 import { useLoaderData } from 'react-router-dom'
-import useRecipesStore from '../../stores/recipes.ts'
 import * as api from '../../api/index.ts'
 //import type { Recipe } from '../../interfaces/dataTypes'
 //import { useLoaderData } from 'react-router-dom'
@@ -9,8 +8,6 @@ import * as api from '../../api/index.ts'
 export async function loader({ params }) {
     //console.log( === 1)
     const {data}= await api.fetchOneRecipe(Number(params.id))
-    console.log(data)
-    const id = params.id
     return { recipe: data };
 }
 

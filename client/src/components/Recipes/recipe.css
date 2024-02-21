@@ -3,6 +3,18 @@ button {
     border: 0;
 }
 
+.recipe-card{
+    box-shadow: 0 0 0 transparent;
+    transition: all;
+    transition-duration: 0.15s;
+}
+.recipe-card:hover{
+    transform: scale(102%);
+    box-shadow: 0 0 10px rgba(245, 255, 106, 0.733);
+    transition: all;
+    transition-duration: 0.15s;
+}
+
 .danger-active:active{
     color: white !important;;
 }
