@@ -42,7 +42,7 @@ const RecipeCard: FC<RecipeProps> = ({ recipe }) => {
                         </Dropdown.Menu>
                     </Dropdown>
                 </Card.Title>
-                <Card.Subtitle className="font-weight-light">{recipe.recipe_type}</Card.Subtitle>
+                <Card.Subtitle className="fst-italic ">{recipe.recipe_type}</Card.Subtitle>
                 <Card.Text>
                     {recipe.description}
                 </Card.Text>
