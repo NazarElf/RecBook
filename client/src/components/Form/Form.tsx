@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Form, FloatingLabel, Button, Row, Col, Card, } from 'react-bootstrap';
 
-import type { Recipe } from "../../interfaces/dataTypes.ts";
+import type { RecipeDetails } from "../../interfaces/dataTypes.ts";
 import { redirect, useLoaderData, useNavigate, useSubmit } from "react-router-dom";
 import { createRecipe, fetchOneRecipe, updateRecipe } from "../../api/index.ts";
 
@@ -13,7 +13,7 @@ export async function loader({ params }) {
 
 export async function action({ request, params }) {
     const formData = await request.formData();
-    const recipe: Recipe = Object.fromEntries(formData)
+    const recipe: RecipeDetails = Object.fromEntries(formData)
 
     if (!params.id) {
         const { data: { id } } = await createRecipe(recipe)
@@ -28,10 +28,9 @@ const MyForm = () => {
 
     const navigate = useNavigate()
 
-    /* @ts-ignore */
-    const data: Recipe = useLoaderData()
+    const data = useLoaderData() as RecipeDetails
 
-    const [recipe, setRecipe] = useState<Recipe>(data || { name: "", description: "", cooking_order: "", recipe_type_id: 0 })
+    const [recipe, setRecipe] = useState<RecipeDetails>(data || { name: "", description: "", cooking_order: "", recipe_type_id: 0 })
 
     const submit = useSubmit()
 
@@ -43,6 +42,7 @@ const MyForm = () => {
         setValidated(true)
         form.checkValidity()
         if (recipe.name && recipe.description && recipe.cooking_order && recipe.recipe_type_id && recipe.recipe_type_id > 0) {
+            /* @ts-ignore */
             submit(recipe, { method: "POST" })
         }
         else {

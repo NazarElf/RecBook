@@ -7,8 +7,8 @@ import * as api from '../../api/index.ts'
 import type { Recipe } from "../../interfaces/dataTypes.ts";
 
 export async function loader() {
-    const {data} = await api.fetchRecipes()
-    return { recipes: data };
+    const { data: recipes } = await api.fetchRecipes()
+    return { recipes };
 }
 
 

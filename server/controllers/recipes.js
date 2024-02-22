@@ -1,9 +1,10 @@
 import { connection } from "../sql_connection.js"
-import '../models/recipeMessage.js'
 import Recipe from "../models/recipeMessage.js";
 
 export const getRecipes = (req, res) => {
-    connection.query('SELECT recipe_id as id, name, description, cooking_order, recipe_type_id FROM recipe;',
+    connection.query(
+        'SELECT recipe_id as id, r.name AS name, description, rt.name AS recipe_type, rt.recipe_type_id FROM recipe AS r ' +
+        'LEFT JOIN `Recipe_Type` AS rt ON r.recipe_type_id = rt.recipe_type_id;',
         async function (error, results, fields) {
             if (error) {
                 res.status(404).json({ message: error.message })
@@ -70,7 +71,9 @@ export const deleteRecipe = (req, res) => {
 
 export const fetchOneRecipe = (req, res) => {
     const { id: _id } = req.params;
-    connection.query('SELECT recipe_id as id, name, description, cooking_order, recipe_type_id FROM `Recipe` WHERE Recipe_ID = ?', _id,
+    connection.query(
+        'SELECT recipe_id as id, r.name AS name, description, cooking_order, rt.name AS recipe_type, rt.recipe_type_id FROM recipe AS r ' +
+        'LEFT JOIN `Recipe_Type` AS rt ON r.recipe_type_id = rt.recipe_type_id WHERE Recipe_ID = ?', _id,
         function (error, results, fields) {
             if (error) {
                 console.log(error)

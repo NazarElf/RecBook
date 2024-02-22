@@ -8,6 +8,6 @@ export const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
             onClick(e);
         }}
     >
-        {children}{' '}<i class="bi bi-three-dots"></i>
+        {children}{' '}<i className="bi bi-three-dots"></i>
     </button>
 ));

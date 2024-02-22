@@ -16,20 +16,9 @@ const RecipeCard: FC<RecipeProps> = ({ recipe }) => {
     const submit = useSubmit()
 
     console.log(recipe)
-    const type: string | undefined = (() => {
-        switch (recipe.recipe_type_id) {
-            case 1: return "Desserts"
-            case 2: return "Starters"
-            case 3: return "Snacks"
-            case 4: return "Main courses"
-            case 5: return "Drinks"
-            default: return undefined
-        }
-    })()
 
     const onRemoveClick = () => {
         let a = `/recipes/${recipe.id}/delete`
-        console.log(a)
         submit(null, {method: "delete", action: a})
     }
     const onModifyClick = () =>
@@ -53,7 +42,7 @@ const RecipeCard: FC<RecipeProps> = ({ recipe }) => {
                         </Dropdown.Menu>
                     </Dropdown>
                 </Card.Title>
-                <Card.Subtitle className="font-weight-light">{type}</Card.Subtitle>
+                <Card.Subtitle className="font-weight-light">{recipe.recipe_type}</Card.Subtitle>
                 <Card.Text>
                     {recipe.description}
                 </Card.Text>

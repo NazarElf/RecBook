@@ -1,10 +1,14 @@
 import axios from 'axios'
-import type { Recipe } from '../interfaces/dataTypes'
+import type { Recipe, RecipeDetails, RecipeType } from '../interfaces/dataTypes'
 
-const url = 'http://192.168.0.112:5000/recipes'
+const url = 'http://192.168.0.112:5000'
+const recipesUrl = `${url}/recipes`
+const recipeTypesUrl = `${url}/recipeTypes`
 
-export const fetchRecipes = () => axios.get<Recipe[]>(url)
-export const createRecipe = (newRecipe: Recipe) => axios.post<Recipe>(url, newRecipe)
-export const updateRecipe = (id: number, updRecipe: Recipe) => axios.patch<Recipe>(`${url}/${id}`, updRecipe)
-export const removeRecipe = (id: number) => axios.delete(`${url}/${id}`)
-export const fetchOneRecipe = (id: number) => axios.get<Recipe>(`${url}/${id}`)
+export const fetchRecipes = () => axios.get<Recipe[]>(recipesUrl)
+export const createRecipe = (newRecipe: RecipeDetails) => axios.post<RecipeDetails>(recipesUrl, newRecipe)
+export const updateRecipe = (id: number, updRecipe: RecipeDetails) => axios.patch<RecipeDetails>(`${recipesUrl}/${id}`, updRecipe)
+export const removeRecipe = (id: number) => axios.delete(`${recipesUrl}/${id}`)
+export const fetchOneRecipe = (id: number) => axios.get<RecipeDetails>(`${recipesUrl}/${id}`)
+
+export const fetchRecipeTypes = () => axios.get<RecipeType[]>(recipeTypesUrl)
