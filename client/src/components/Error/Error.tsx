@@ -17,7 +17,7 @@ const ErrorPage: FC = () => {
                     {/*@ts-ignore*/}
                     <i>{error.statusText || error.message}</i>
                 </p>
-                <Button onClick={() => navigate('/')}>Go Home!</Button>
+                <Button onClick={() => navigate(-1)}>Go Back!</Button>
             </div>
         </Container>
     )
