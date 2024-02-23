@@ -3,7 +3,7 @@ import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } 
 
 import RecipeDetails, { loader as detailsLoader } from './components/Recipes/RecipeDetails.tsx'
 import ErrorPage from './components/Error/Error.tsx'
-import Header from './components/Navbar/Header.tsx'
+import Header from './components/Header/Header.tsx'
 //import 
 import Recipes, { loader as recipesLoader } from './components/Recipes/Recipes.tsx'
 import './index.css'

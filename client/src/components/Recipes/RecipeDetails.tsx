@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useLoaderData, useNavigate, useSubmit } from 'react-router-dom'
+import { useLoaderData, useNavigate } from 'react-router-dom'
 import * as api from '../../api/index.ts'
 import type { RecipeDetails as Details } from '../../interfaces/dataTypes.ts'
-import { Col, Row, Button, Container, Spinner, Figure, ButtonGroup, ButtonToolbar, Modal } from "react-bootstrap";
+import { Col, Row, Button, Container, Spinner, Figure, ButtonGroup, ButtonToolbar } from "react-bootstrap";
 import RecipeRemoveModal from './RecipeRemoveModal.tsx';
 
 export async function loader({ params }) {
@@ -14,7 +14,6 @@ const RecipeDetails = () => {
 
     const { recipe } = useLoaderData() as { recipe: Details }
     const navigate = useNavigate()
-    const submit = useSubmit()
     const text = useRef<HTMLHeadingElement>(null)
     const img = useRef<HTMLImageElement>(null)
     const [width, setWidth] = useState<number | undefined>(0)
@@ -35,12 +34,7 @@ const RecipeDetails = () => {
         navigate(`/recipes/${recipe.id}/modify`)
     }
 
-    const handleClose = () => setShow(false)
 
-    const handleRemove = () => {
-        let a = `/recipes/${recipe.id}/delete`
-        submit(null, { method: "delete", action: a })
-    }
 
     return (
         <>
@@ -92,7 +86,7 @@ const RecipeDetails = () => {
                     </Col>
                 </Row>
             </Container>
-            <RecipeRemoveModal show={show} handleClose={handleClose} handleRemove={handleRemove} />
+            <RecipeRemoveModal show={show} setShow={setShow} id={recipe.id} />
         </>
     )
 }

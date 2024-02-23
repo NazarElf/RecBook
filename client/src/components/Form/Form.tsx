@@ -1,9 +1,9 @@
 //import  from "react";
 import React, { useState } from "react";
-import { Form, FloatingLabel, Button, Row, Col, Card, Container } from 'react-bootstrap';
+import { Form, FloatingLabel, Button, Row, Col, Card, Container, Spinner } from 'react-bootstrap';
 
 import type { RecipeDetails } from "../../interfaces/dataTypes.ts";
-import { redirect, useLoaderData, useNavigate, useSubmit } from "react-router-dom";
+import { redirect, useLoaderData, useNavigate, useSubmit, useNavigation } from "react-router-dom";
 import { createRecipe, fetchOneRecipe, updateRecipe } from "../../api/index.ts";
 
 export async function loader({ params }) {
@@ -27,6 +27,7 @@ const MyForm = () => {
     const [validated, setValidated] = useState(false);
 
     const navigate = useNavigate()
+    const navigation = useNavigation()
 
     const data = useLoaderData() as RecipeDetails
 
@@ -43,7 +44,7 @@ const MyForm = () => {
         form.checkValidity()
         if (recipe.name && recipe.description && recipe.cooking_order && recipe.recipe_type_id && recipe.recipe_type_id > 0) {
             /* @ts-ignore */
-            submit(recipe, { method: "POST" })
+            submit(recipe, { method: "POST", replace: true })
         }
         else {
             event.stopPropagation()
@@ -56,7 +57,7 @@ const MyForm = () => {
     }
 
     return (
-        <Container>
+        <Container >
             <Card className="m-3">
                 <Card.Header>Add new Recipe</Card.Header>
                 <Card.Body>
@@ -88,7 +89,15 @@ const MyForm = () => {
                         </FloatingLabel>
                         <Row >
                             <Col >
-                                <Button variant="primary" type="submit" style={{ width: "100%" }}>Submit</Button>
+                                <Button variant="primary" type="submit" style={{ width: "100%" }} disabled={navigation.state === 'submitting'}>
+                                    {navigation.state === 'submitting' && <Spinner
+                                        as='span'
+                                        size="sm"
+                                        role="status"
+                                        aria-hidden='true'
+                                    />}
+                                    {navigation.state !== 'submitting' && <span>Submit</span>}
+                                </Button>
                             </Col>
                             <Col>
                                 <Button variant="outline-primary" style={{ width: "100%" }} onClick={onBack}>Go Back</Button>
@@ -100,5 +109,6 @@ const MyForm = () => {
         </Container>
     )
 }
+//{navigation.state === 'submitting' ? <Spinner/> : 'Submit'}
 
 export default MyForm;

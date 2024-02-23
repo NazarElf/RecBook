@@ -1,13 +1,20 @@
 import React, { FC } from 'react'
 import { Modal, Button } from 'react-bootstrap'
+import { useSubmit } from 'react-router-dom'
 
 interface PropType {
     show: boolean,
-    handleClose: () => void,
-    handleRemove: () => void
+    id?: number
+    setShow: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
-const RecipeRemoveModal: FC<PropType> = ({ show, handleClose, handleRemove }) => {
+const RecipeRemoveModal: FC<PropType> = ({ show, id, setShow }) => {
+    const submit = useSubmit()
+    const handleClose = () => setShow(false)
+    const handleRemove = () => {
+        let a = `/recipes/${id}/delete`
+        submit(null, { method: "delete", action: a })
+    }
     return (
         <Modal show={show}>
             <Modal.Header>
