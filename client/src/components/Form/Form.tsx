@@ -1,6 +1,6 @@
 //import  from "react";
 import React, { useState } from "react";
-import { Form, FloatingLabel, Button, Row, Col, Card, } from 'react-bootstrap';
+import { Form, FloatingLabel, Button, Row, Col, Card, Container } from 'react-bootstrap';
 
 import type { RecipeDetails } from "../../interfaces/dataTypes.ts";
 import { redirect, useLoaderData, useNavigate, useSubmit } from "react-router-dom";
@@ -56,7 +56,7 @@ const MyForm = () => {
     }
 
     return (
-        <>
+        <Container>
             <Card className="m-3">
                 <Card.Header>Add new Recipe</Card.Header>
                 <Card.Body>
@@ -97,7 +97,7 @@ const MyForm = () => {
                     </Form>
                 </Card.Body>
             </Card>
-        </>
+        </Container>
     )
 }
 
