@@ -5,6 +5,7 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 import * as api from '../../api/index.ts'
 
 import type { Recipe } from "../../interfaces/dataTypes.ts";
+import FilterOffcanvas from "../Filters/FilterOffcanvas.tsx";
 
 export async function loader() {
     const { data: recipes } = await api.fetchRecipes()
@@ -20,7 +21,14 @@ const Recipes = () => {
     return (
         <Container className="border mt-sm-4 rounded" style={{ background: "#ffffffaf" }}>
             <Container className="my-3">
-                <Button variant="primary" onClick={() => navigate('/recipes/create')}><i className="bi bi-plus"> </i>Create recipe</Button>
+                <Row className="justify-content-between">
+                    <Col>
+                        <Button variant="primary" onClick={() => navigate('/recipes/create')}><i className="bi bi-plus"> </i>Create recipe</Button>
+                    </Col>
+                    <Col>
+                        <FilterOffcanvas />
+                    </Col>
+                </Row>
                 <Row xs={1} md={2} xl={3} className="g-3 mt-3" direction="horizontal">
                     {!recipes.length ? <Col><Spinner animation="border" variant="primary" /> </Col> :
                         recipes.map((recipe, idx) => (

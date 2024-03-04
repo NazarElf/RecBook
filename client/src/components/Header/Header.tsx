@@ -1,17 +1,19 @@
 import React, { FC, useState } from "react"
-import { Navbar, Container, Offcanvas, Button, Nav, NavDropdown } from "react-bootstrap"
-import { useNavigate, Outlet } from "react-router-dom"
+import { Navbar, Container, Offcanvas, Button, Nav } from "react-bootstrap"
+import { useNavigate, Outlet, useLocation } from "react-router-dom"
 
 const Header: FC = () => {
     const navigate = useNavigate()
+    const location = useLocation()
+
     const [expanded, setExpanded] = useState(false)
     return (
         <>
             <Navbar key="md" expand="md" className="bg-body-tertiary" onToggle={() => setExpanded(state => !state)} expanded={expanded}>
                 <Container fluid>
-                    <Navbar.Brand onClick={() => {navigate('/'); setExpanded(false)}}>
+                    <Navbar.Brand onClick={() => { navigate('/'); setExpanded(false) }}>
                         <img
-                            src="/RecBook.svg" // Replace with your logo path
+                            src="/RecBook.svg"
                             alt="Logo"
                             width="30"
                             height="30"
@@ -23,7 +25,7 @@ const Header: FC = () => {
                         <Offcanvas.Header closeButton>
                             <Offcanvas.Title>
                                 <img
-                                    src="/RecBook.svg" // Replace with your logo path
+                                    src="/RecBook.svg"
                                     alt="Logo"
                                     width="30"
                                     height="30"
@@ -32,19 +34,9 @@ const Header: FC = () => {
                             </Offcanvas.Title>
                         </Offcanvas.Header>
                         <Offcanvas.Body>
-                            <Nav className="me-auto my-2 my-md-0">
-                                <Nav.Link onClick={() => {navigate('/'); setExpanded(false) }}>Home</Nav.Link>
-                                <Nav.Link onClick={() => {navigate('/recipes'); setExpanded(false)}}>Recipes</Nav.Link>
-                                <NavDropdown title="Placeholder" id="navbarScrollingDropdown">
-                                    <NavDropdown.Item href="#action3">Placeholder action</NavDropdown.Item>
-                                    <NavDropdown.Item href="#action4">
-                                        Placeholder action 2
-                                    </NavDropdown.Item>
-                                    <NavDropdown.Divider />
-                                    <NavDropdown.Item href="#action5">
-                                        Placeholder action 3
-                                    </NavDropdown.Item>
-                                </NavDropdown>
+                            <Nav variant="underline" className="me-auto my-2 my-md-0">
+                                <Nav.Link active={location.pathname === '/'} onClick={() => { navigate('/'); setExpanded(false) }}>Home</Nav.Link>
+                                <Nav.Link active={location.pathname === '/recipes'} onClick={() => { navigate('/recipes'); setExpanded(false) }}>Recipes</Nav.Link>
                             </Nav>
                             <Nav className="gap-2">
                                 <Button>

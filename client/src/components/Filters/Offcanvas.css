@@ -1,0 +1,9 @@
+.close-icon{
+    text-shadow: none;
+    transition: all .2s;
+}
+
+.close-icon:hover{
+    text-shadow: 0 0 10px white;
+    transition: all .2s;
+}

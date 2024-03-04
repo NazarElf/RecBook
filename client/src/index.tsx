@@ -9,6 +9,7 @@ import Recipes, { loader as recipesLoader } from './components/Recipes/Recipes.t
 import './index.css'
 import MyForm, { action as recipeFormAction, loader as recipeFormLoader } from './components/Form/Form.tsx'
 import { action as destroyAction } from './components/Recipes/RecipeDestroy.ts'
+import { loader as productsLoader } from './components/Filters/FilterOffcanvas.tsx'
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -38,6 +39,9 @@ const router = createBrowserRouter(
                 <Route
                     path='/recipes/:id/delete'
                     action={destroyAction} />
+                <Route
+                    path='/products'
+                    loader={ productsLoader } />
             </Route>
         </Route>
     )

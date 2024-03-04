@@ -15,3 +15,15 @@ export interface RecipeType {
     id?: number,
     name?: string
 }
+
+export interface Product {
+    product_id: number,
+    name: string,
+    type_id: number,
+    type_name: string,
+}
+
+export interface RecipeProduct extends Product {
+    quantity: number,
+    unit: string
+}
