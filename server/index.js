@@ -5,6 +5,7 @@ import { connection } from "./sql_connection.js";
 
 import recipesRoutes from './routes/recipes.js'
 import recipeTypesRoutes from './routes/recipeTypes.js'
+import productsRouter from './routes/products.js'
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(cors());
 
 app.use('/recipes', recipesRoutes)
 app.use('/recipeTypes', recipeTypesRoutes)
+app.use('/products', productsRouter)
 
 const PORT = process.env.PORT || 5000;
 
