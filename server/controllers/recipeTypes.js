@@ -9,7 +9,6 @@ export const getRecipeTypes = (req, res) => {
                 res.status(400).json({message: error.message})
                 return
             }
-            console.log(results)
             res.status(200).json(results)
         })
 }

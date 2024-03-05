@@ -1,10 +1,18 @@
-import { connection } from "../sql_connection.js"
+import { connection, getFilter } from "../sql_connection.js"
 import Recipe from "../models/recipeMessage.js";
 
+function arrayFromString(str) {
+    return str?.split(',').filter(Number).map(Number) || []
+}
+
 export const getRecipes = (req, res) => {
-    connection.query(
-        'SELECT recipe_id as id, r.name AS name, description, rt.name AS recipe_type, rt.recipe_type_id FROM recipe AS r ' +
-        'LEFT JOIN `Recipe_Type` AS rt ON r.recipe_type_id = rt.recipe_type_id;',
+    let queries = req.query;
+
+    let types = arrayFromString(queries.types)
+    let products = arrayFromString(queries.products)
+    let sql_query_string = getFilter(products, types)
+
+    let str = connection.query(sql_query_string,
         async function (error, results, fields) {
             if (error) {
                 res.status(404).json({ message: error.message })
@@ -14,6 +22,7 @@ export const getRecipes = (req, res) => {
                 res.status(200).send(results)
             }
         })
+    console.log(str.sql)
 }
 
 
