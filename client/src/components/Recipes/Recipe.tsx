@@ -16,8 +16,6 @@ const RecipeCard: FC<RecipeProps> = ({ recipe }) => {
 
     const [show, setShow] = useState<boolean>(false)
 
-    console.log(recipe)
-
     const onRemoveClick = () => {
         setShow(true)
     }

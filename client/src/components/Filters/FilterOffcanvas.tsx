@@ -1,51 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { fetchAllProducts, fetchRecipeTypes } from "../../api/index.ts";
-import { useFetcher } from "react-router-dom";
-import { Button, Offcanvas, Accordion, Container, ListGroup, ToggleButton, ToggleButtonGroup, Badge, Form } from "react-bootstrap";
+import { useFetcher, useSearchParams } from "react-router-dom";
+import { Button, Offcanvas, Accordion, Container, ListGroup, ToggleButton, ToggleButtonGroup, Badge } from "react-bootstrap";
 
 import type { Product, RecipeType } from "../../interfaces/dataTypes.ts";
 
 import './Offcanvas.css'
-
-export async function loader() {
-    const { data: products } = await fetchAllProducts()
-    const { data: recipeTypes } = await fetchRecipeTypes()
-    return { products, recipeTypes }
-}
-
-interface ProductsGroup {
-    name: string,
-    products: Array<Product>
-}
-
-var groupBy = function (xs: Array<Product>) {
-    var res: Array<ProductsGroup> = []
-
-    xs.forEach((product) => {
-        var group = res.find(gr => gr.name === product.type_name)
-        if (group) {
-            group.products.push(product)
-        }
-        else {
-            res.push({ name: product.type_name, products: [product] })
-        }
-    })
-
-    return res;
-};
+import ProductsSelector from "./ProductsSelector.tsx";
 
 const FilterOffcanvas = () => {
 
     const [show, setShow] = useState<boolean>(false)
-    const [allProducts, setAllProducts] = useState<Array<Product>>([])
     const [selectedProducts, setSelectedProducts] = useState<Array<Product>>([])
-    const [productsGroupedList, setProductsGroupedList] = useState<Array<ProductsGroup>>([])
     const [recipeTypes, setRecipeTypes] = useState<Array<RecipeType>>([])
     const [selectedRecipeTypes, setSelectedRecipeTypes] = useState<RecipeType[]>([])
+    const [productIds, setProductIds] = useState<number[]>([]) //used to send to selector ids of fetched products
+    const [isFiltered, setIsFiltered] = useState<Boolean>(false)
 
-    const [value, setValue] = useState<string>("")
-
-
+    const [searchParams, setSearchParams] = useSearchParams()
 
     const fetcher = useFetcher()
     useEffect(() => {
@@ -53,11 +24,22 @@ const FilterOffcanvas = () => {
             fetcher.load('/products')
         }
         if (fetcher.data) {
-            setAllProducts(fetcher.data.products)
-            setProductsGroupedList(groupBy(fetcher.data.products))
             setRecipeTypes(fetcher.data.recipeTypes)
         }
     }, [fetcher])
+
+    useEffect(() => {
+        selectedRecipeTypesChanged(searchParams.get('types')?.split(',').filter(Number).map(Number) || [])
+        let pdi = searchParams.get('products')?.split(',').filter(Number).map(Number) || []
+        setProductIds(pdi)
+    }, [recipeTypes, searchParams])
+
+    useEffect(() => {
+        if (!isFiltered) {
+            applyFilters()
+        }
+        setIsFiltered(true)
+    }, [selectedProducts, selectedRecipeTypes])
 
     const removeProduct = (product: Product) => (e) => {
         setSelectedProducts(selectedProducts.filter(element => element !== product))
@@ -67,10 +49,6 @@ const FilterOffcanvas = () => {
         setSelectedRecipeTypes(selectedRecipeTypes.filter(type => type !== recipeType))
     }
 
-    const selectedProductsChanged = (gr) => {
-        setSelectedProducts(allProducts.filter(product => gr.includes(product.product_id)))
-    }
-
     const selectedRecipeTypesChanged = (gr) => {
         setSelectedRecipeTypes(recipeTypes.filter(type => gr.includes(type.id)))
     }
@@ -78,7 +56,21 @@ const FilterOffcanvas = () => {
     const clearFilters = () => {
         setSelectedProducts([])
         setSelectedRecipeTypes([])
-        setValue("")
+        setIsFiltered(false)
+    }
+
+    function createFilter() {
+        let productsString = selectedProducts.map(product => product.product_id).join(',')
+        let typesString = selectedRecipeTypes.map(type => type.id).join(',')
+        let filters: any = {}
+        if (productsString) filters.products = productsString
+        if (typesString) filters.types = typesString
+        return filters
+    }
+
+    const applyFilters = () => {
+        setSearchParams(createFilter())
+        setShow(false)
     }
 
     return (
@@ -87,7 +79,7 @@ const FilterOffcanvas = () => {
             <Offcanvas show={show} placement="end" >
                 <Offcanvas.Header closeButton onHide={() => setShow(false)}>
                     <div className="d-flex gap-2">
-                        <Button>Set Filter</Button>
+                        <Button onClick={applyFilters}>Set Filter</Button>
                         <Button variant="outline-primary" onClick={clearFilters}>Clear Filters</Button>
                     </div>
                 </Offcanvas.Header>
@@ -99,24 +91,8 @@ const FilterOffcanvas = () => {
                     <Accordion flush>
                         <Accordion.Item eventKey="0" >
                             <Accordion.Header>Products</Accordion.Header>
-                            <Accordion.Body className="p-0 py-3" onExited={() => setValue("")}>
-                                <Container fluid className="overflow-auto" style={{ maxHeight: 500 }}>
-                                    <Form.Control
-                                        className="my-2"
-                                        placeholder="Type to filter..."
-                                        onChange={(e) => setValue(e.target.value)}
-                                        value={value} />
-                                    {productsGroupedList.filter(prodGroup => prodGroup.products.find(product => product.name.toLowerCase().startsWith(value.toLowerCase()))).map(prodGroup =>
-                                        <div key={prodGroup.name}>
-                                            <h6 className="fw-bold text-center mt-2">{prodGroup.name}</h6>
-                                            <ListGroup as={ToggleButtonGroup} type="checkbox" vertical variant="light" onChange={selectedProductsChanged} value={selectedProducts.map(elem => elem.product_id)} className="rounded-0">
-                                                {prodGroup.products.filter(prod => prod.name.toLowerCase().startsWith(value.toLowerCase())).map(prod =>
-                                                    <ListGroup.Item as={ToggleButton} value={prod.product_id} id={prod.name} key={prod.product_id} variant="light" className="rounded-0 btn-light">
-                                                        {prod.name}
-                                                    </ListGroup.Item>)}
-                                            </ListGroup>
-                                        </div>)}
-                                </Container>
+                            <Accordion.Body className="p-0 py-3">
+                                <ProductsSelector selectedProducts={selectedProducts} setSelectedProducts={setSelectedProducts} productIds={productIds} />
                             </Accordion.Body>
                         </Accordion.Item>
                         <Accordion.Item eventKey="1">

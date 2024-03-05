@@ -7,8 +7,9 @@ import * as api from '../../api/index.ts'
 import type { Recipe } from "../../interfaces/dataTypes.ts";
 import FilterOffcanvas from "../Filters/FilterOffcanvas.tsx";
 
-export async function loader() {
-    const { data: recipes } = await api.fetchRecipes()
+export async function loader({ request }) {
+    let url = new URL(request.url)
+    const { data: recipes } = await api.fetchRecipes(url.searchParams.toString())
     return { recipes };
 }
 

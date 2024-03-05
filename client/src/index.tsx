@@ -9,7 +9,7 @@ import Recipes, { loader as recipesLoader } from './components/Recipes/Recipes.t
 import './index.css'
 import MyForm, { action as recipeFormAction, loader as recipeFormLoader } from './components/Form/Form.tsx'
 import { action as destroyAction } from './components/Recipes/RecipeDestroy.ts'
-import { loader as productsLoader } from './components/Filters/FilterOffcanvas.tsx'
+import { loader as productsLoader } from './components/Products/Products.ts'
 
 const router = createBrowserRouter(
     createRoutesFromElements(

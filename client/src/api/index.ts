@@ -6,7 +6,9 @@ const recipesUrl = `${url}/recipes`
 const recipeTypesUrl = `${url}/recipeTypes`
 const productsUrl = `${url}/products`
 
-export const fetchRecipes = () => axios.get<Recipe[]>(recipesUrl)
+export const fetchRecipes = (paramsString: string) => {
+    return axios.get<Recipe[]>(recipesUrl + '?' + paramsString)
+}
 export const createRecipe = (newRecipe: RecipeDetails) => axios.post<RecipeDetails>(recipesUrl, newRecipe)
 export const updateRecipe = (id: number, updRecipe: RecipeDetails) => axios.patch<RecipeDetails>(`${recipesUrl}/${id}`, updRecipe)
 export const removeRecipe = (id: number) => axios.delete(`${recipesUrl}/${id}`)
