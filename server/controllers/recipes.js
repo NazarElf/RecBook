@@ -79,8 +79,17 @@ export const deleteRecipe = (req, res) => {
 export const fetchOneRecipe = (req, res) => {
     const { id: _id } = req.params;
     connection.query(
-        'SELECT recipe_id as id, r.name AS name, description, cooking_order, rt.name AS recipe_type, rt.recipe_type_id FROM recipe AS r ' +
-        'LEFT JOIN `Recipe_Type` AS rt ON r.recipe_type_id = rt.recipe_type_id WHERE Recipe_ID = ?', _id,
+        `SELECT 
+            r.recipe_id AS ${recipe.recipe_id_field}, 
+            r.name AS ${recipe.recipe_name_field}, 
+            r.description AS ${recipe.recipe_description_field}, 
+            r.cooking_order AS ${recipe.recipe_cooking_order_field}, 
+            rt.name AS ${recipe.recipe_type_id_field}, 
+            rt.recipe_type_id AS ${recipe.recipe_type_id_field}
+        FROM recipe AS r 
+        LEFT JOIN \`Recipe_Type\` AS rt ON r.recipe_type_id = rt.recipe_type_id
+        
+        WHERE Recipe_ID = ?`, _id,
         function (error, results, fields) {
             if (error) {
                 console.log(error)
