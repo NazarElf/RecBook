@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Form, FloatingLabel, Button, Row, Col, Spinner, Modal } from 'react-bootstrap';
 
-import type { RecipeDetails, RecipeProduct } from "../../interfaces/dataTypes.ts";
+import type { RecipeDetails, RecipeProduct, SendRecipe } from "../../interfaces/dataTypes.ts";
 import { redirect, useLoaderData, useNavigate, useSubmit, useNavigation } from "react-router-dom";
 import { createRecipe, fetchOneRecipe, updateRecipe } from "../../api/index.ts";
 import ProductsSelector from "../Products/ProductsSelector.tsx";
@@ -32,7 +32,7 @@ const MyForm = () => {
 
     const data = useLoaderData() as RecipeDetails
 
-    const [recipe, setRecipe] = useState<RecipeDetails>(data || { name: "", description: "", cooking_order: "", recipe_type_id: 0 })
+    const [recipe, setRecipe] = useState<RecipeDetails>(data || { name: "", description: "", cooking_order: "", recipe_type_id: 0, products: [] })
     const [products, setProducts] = useState<RecipeProduct[]>([])
     const [show, setShow] = useState<boolean>(false)
     const [errorShow, setErrorShow] = useState<boolean>(false)
@@ -46,8 +46,9 @@ const MyForm = () => {
 
         form.checkValidity()
         if (recipe.name && recipe.description && recipe.cooking_order && recipe.recipe_type_id && recipe.recipe_type_id > 0 && products.length > 0) {
+            let sendRecipe : SendRecipe = { ...recipe, product_ids: products.map(prod => prod.id || 0)}
             /* @ts-ignore */
-            submit(recipe, { method: "POST", replace: true })
+            submit(sendRecipe, { method: "POST", replace: true })
         }
         else {
             event.stopPropagation()
