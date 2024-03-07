@@ -1,6 +1,9 @@
-export interface Recipe {
+export interface Entity {
     id?: number,
     name?: string,
+}
+
+export interface Recipe extends Entity {
     recipe_type_id?: number,
     recipe_type?: string,
     description?: string,
@@ -11,19 +14,15 @@ export interface RecipeDetails extends Recipe {
     cooking_order?: string,
 }
 
-export interface RecipeType {
-    id?: number,
-    name?: string
+export interface RecipeType extends Entity {
 }
 
-export interface Product {
-    product_id: number,
-    name: string,
-    type_id: number,
-    type_name: string,
+export interface Product extends Entity {
+    type_id?: number,
+    type_name?: string,
 }
 
 export interface RecipeProduct extends Product {
-    quantity: number,
-    unit: string
+    quantity?: number,
+    unit?: string
 }

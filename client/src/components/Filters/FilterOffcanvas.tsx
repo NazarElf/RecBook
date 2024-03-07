@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useFetcher, useSearchParams } from "react-router-dom";
-import { Button, Offcanvas, Accordion, Container, ListGroup, ToggleButton, ToggleButtonGroup, Badge } from "react-bootstrap";
+import { Button, Offcanvas, Accordion, Container, ListGroup, Badge } from "react-bootstrap";
+import { XButton } from "../CustomComponents.tsx";
 
 import type { Product, RecipeType } from "../../interfaces/dataTypes.ts";
 
 import './Offcanvas.css'
-import ProductsSelector from "./ProductsSelector.tsx";
+import ProductsSelector from "../Products/ProductsSelector.tsx";
 
 const FilterOffcanvas = () => {
 
@@ -60,7 +61,7 @@ const FilterOffcanvas = () => {
     }
 
     function createFilter() {
-        let productsString = selectedProducts.map(product => product.product_id).join(',')
+        let productsString = selectedProducts.map(product => product.id).join(',')
         let typesString = selectedRecipeTypes.map(type => type.id).join(',')
         let filters: any = {}
         if (productsString) filters.products = productsString
@@ -73,9 +74,18 @@ const FilterOffcanvas = () => {
         setShow(false)
     }
 
+    const toggleType = (type_id) => () => {
+        if (selectedRecipeTypes.find(srt => srt.id === type_id)) {
+            setSelectedRecipeTypes(selectedRecipeTypes.filter(srt => srt.id !== type_id))
+            return
+        }
+        let typeToAdd = recipeTypes.find(type => type.id === type_id);
+        if (typeToAdd) setSelectedRecipeTypes([...selectedRecipeTypes, typeToAdd])
+    }
+
     return (
         <>
-            <Button onClick={() => setShow(true)}>Filter</Button>
+            <Button onClick={() => setShow(true)}><i className="bi bi-funnel-fill" />{' '}Filter</Button>
             <Offcanvas show={show} placement="end" >
                 <Offcanvas.Header closeButton onHide={() => setShow(false)}>
                     <div className="d-flex gap-2">
@@ -84,24 +94,26 @@ const FilterOffcanvas = () => {
                     </div>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
-                    <div className="d-flex flex-wrap column-gap-2">
-                        {selectedProducts.map(product => <h5 key={product.product_id}><Badge bg="secondary" pill>{product.name}{' '}<i style={{ cursor: "pointer" }} onClick={removeProduct(product)} className="bi bi-x-lg close-icon"></i></Badge></h5>)}
-                        {selectedRecipeTypes.map(type => <h5 key={type.id}><Badge bg="secondary" pill>{type.name}{' '}<i style={{ cursor: "pointer" }} onClick={removeRecipeType(type)} className="bi bi-x-lg close-icon"></i></Badge></h5>)}
+                    <div className="d-flex flex-wrap gap-2 pb-3">
+                        {selectedProducts.map(product => <Badge className="d-flex p-2 align-items-center" bg="primary-subtle" text="primary-emphasis" pill key={product.id}><span className="px-1">{product.name}</span><XButton onClick={removeProduct(product)} /></Badge>)}
+                        {selectedRecipeTypes.map(type => <Badge className="d-flex p-2 align-items-center" bg="primary-subtle" text="primary-emphasis" pill key={type.id}><span className="px-1">{type.name}</span><XButton onClick={removeRecipeType(type)} /></Badge>)}
                     </div>
                     <Accordion flush>
                         <Accordion.Item eventKey="0" >
                             <Accordion.Header>Products</Accordion.Header>
                             <Accordion.Body className="p-0 py-3">
-                                <ProductsSelector selectedProducts={selectedProducts} setSelectedProducts={setSelectedProducts} productIds={productIds} />
+                                <ProductsSelector selectedProducts={selectedProducts} setSelectedProducts={setSelectedProducts} productIds={productIds} style={{maxHeight: 450}} />
                             </Accordion.Body>
                         </Accordion.Item>
                         <Accordion.Item eventKey="1">
                             <Accordion.Header>Recipe Type</Accordion.Header>
                             <Accordion.Body className="p-0 py-3">
-                                <Container fluid className="overflow-auto" style={{ maxHeight: 500 }}>
-                                    <ListGroup as={ToggleButtonGroup} type="checkbox" vertical variant="light" onChange={selectedRecipeTypesChanged} value={selectedRecipeTypes.map(type => type.id)} className="rounded-0">
+                                <Container fluid className="overflow-auto" style={{ maxHeight: 450 }}>
+                                    <ListGroup>
+
                                         {recipeTypes.map(type =>
-                                            <ListGroup.Item as={ToggleButton} value={type.id || 0} id={type.name} key={type.id} variant="light" className="rounded-0 btn-light">
+                                            <ListGroup.Item key={type.id} className="d-flex gap-2" as="label">
+                                                <input className="form-check-input flex-shrink-0" type="checkbox" value={type.id} checked={!!selectedRecipeTypes.find(srt => srt.id === type.id)} onChange={toggleType(type.id)} />
                                                 {type.name}
                                             </ListGroup.Item>
                                         )}

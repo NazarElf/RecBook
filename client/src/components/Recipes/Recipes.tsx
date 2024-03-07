@@ -22,14 +22,10 @@ const Recipes = () => {
     return (
         <Container className="border mt-sm-4 rounded" style={{ background: "#ffffffaf" }}>
             <Container className="my-3">
-                <Row className="justify-content-between">
-                    <Col>
-                        <Button variant="primary" onClick={() => navigate('/recipes/create')}><i className="bi bi-plus"> </i>Create recipe</Button>
-                    </Col>
-                    <Col>
-                        <FilterOffcanvas />
-                    </Col>
-                </Row>
+                <div className="d-flex justify-content-between gap-2">
+                    <Button variant="primary" onClick={() => navigate('/recipes/create')}><i className="bi bi-plus"> </i>Create recipe</Button>
+                    <FilterOffcanvas />
+                </div>
                 <Row xs={1} md={2} xl={3} className="g-3 mt-3" direction="horizontal">
                     {!recipes.length ? <Col><Spinner animation="border" variant="primary" /> </Col> :
                         recipes.map((recipe, idx) => (

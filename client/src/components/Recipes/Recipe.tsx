@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react";
 import { Button, Card, Dropdown } from "react-bootstrap";
 
-import { CustomToggle } from '../CustomComponents.jsx'
+import { CustomToggle } from '../CustomComponents.tsx'
 import './recipe.css'
 
 import type { Recipe } from "../../interfaces/dataTypes.ts";
