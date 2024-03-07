@@ -1,5 +1,6 @@
 import { connection, getFilter } from "../sql_connection.js"
 import Recipe from "../models/recipeMessage.js";
+import * as recipe from "../models/recipeMessage.js"
 
 function arrayFromString(str) {
     return str?.split(',').filter(Number).map(Number) || []
@@ -22,7 +23,6 @@ export const getRecipes = (req, res) => {
                 res.status(200).send(results)
             }
         })
-    console.log(str.sql)
 }
 
 
@@ -51,13 +51,11 @@ export const updateRecipe = (req, res) => {
 
     connection.query('UPDATE `Recipe` SET ? WHERE recipe_id = ?', [updateRecipe, _id],
         function (error, results, fields) {
-            console.log("quering")
             if (error) {
                 console.log(error)
                 res.status(400).json({ message: error.message })
             }
             else {
-                console.log(results, fields)
                 res.status(200).json({ message: "ok" })
             }
         })

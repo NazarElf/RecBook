@@ -15,7 +15,6 @@ export const getFilter = (products = [], filters = []) =>
     
     if(!products.length)
     {
-        console.log(where_placeholder)
         return mysql.format( `SELECT recipe_id as ${recipe.recipe_id_field}, 
           r.name AS ${recipe.recipe_name_field}, 
           description AS ${recipe.recipe_description_field}, 
