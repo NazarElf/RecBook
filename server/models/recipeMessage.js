@@ -9,3 +9,11 @@ class Recipe {
 }
 
 export default Recipe;
+
+export const recipe_name_field = "name"
+export const recipe_id_field = "id"
+export const recipe_cooking_order_field = "cooking order"
+export const recipe_type_id_field = "recipe_type_id"
+export const recipe_type_name_field = "recipe_type"
+export const recipe_description_field = "description"
+export const user_created_id_field = "user_created_id"

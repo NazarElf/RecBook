@@ -1,7 +1,13 @@
 import { connection } from "../sql_connection.js";
+import * as product from '../models/productMessage.js'
 
 export const fetchAllProducts = (req, res) => {
-    connection.query(`SELECT product_id, name, p.type_id, type_name FROM Product AS p LEFT JOIN Product_Type AS pt ON p.type_id = pt.type_id ORDER BY p.type_id, name`,
+    connection.query(`SELECT
+        product_id AS ${product.product_id_field}, 
+        name AS ${product.product_name_field}, 
+        p.type_id AS ${product.product_type_id_field}, 
+        type_name AS ${product.product_type_field}
+    FROM Product AS p LEFT JOIN Product_Type AS pt ON p.type_id = pt.type_id ORDER BY p.type_id, name`,
         function (error, results, fields) {
             if (error) {
                 console.log(error)
@@ -15,7 +21,15 @@ export const fetchAllProducts = (req, res) => {
 export const fetchProductsByRecipe = (req, res) => {
     const { id: _id } = req.params;
     const query =
-    `SELECT p.product_id, p.name, p.type_id, pt.type_name, rp.quantity, u.name as unit_name, alt_p.name as alternitive_product_name FROM Recipe AS r 
+    `SELECT 
+        p.product_id AS ${product.product_id_field}, 
+        p.name AS ${product.product_name_field}, 
+        p.type_id AS ${product.product_type_id_field}, 
+        pt.type_name AS ${product.product_name_field}, 
+        rp.quantity, 
+        u.name as unit_name, 
+        alt_p.name as alternitive_product_name 
+    FROM Recipe AS r 
     INNER JOIN Recipe_Product AS rp ON r.Recipe_ID = rp.Recipe_ID 
     LEFT JOIN Product AS p ON rp.Product_ID = p.Product_ID
     LEFT JOIN Unit AS u ON u.Unit_ID = rp.Unit_ID

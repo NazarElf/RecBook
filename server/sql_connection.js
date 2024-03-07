@@ -1,4 +1,5 @@
 import * as mysql from 'mysql';
+import * as recipe from './models/recipeMessage.js'
 
 export const connection = mysql.createConnection({
     host: "127.0.0.1",
@@ -15,14 +16,24 @@ export const getFilter = (products = [], filters = []) =>
     if(!products.length)
     {
         console.log(where_placeholder)
-        return mysql.format( 'SELECT recipe_id as id, r.name AS name, description, rt.name AS recipe_type, rt.recipe_type_id FROM recipe AS r ' +
-        'LEFT JOIN `Recipe_Type` AS rt ON r.recipe_type_id = rt.recipe_type_id' + where_placeholder, filters)
+        return mysql.format( `SELECT recipe_id as ${recipe.recipe_id_field}, 
+          r.name AS ${recipe.recipe_name_field}, 
+          description AS ${recipe.recipe_description_field}, 
+          rt.name AS ${recipe.recipe_type_name_field}, 
+          rt.recipe_type_id AS ${recipe.recipe_type_id_field} 
+        FROM recipe AS r 
+        LEFT JOIN \`Recipe_Type\` AS rt ON r.recipe_type_id = rt.recipe_type_id` + where_placeholder, filters)
     }
     
     let products_placeholder = products.map(pr => '?').join(',')
     let products_filter = products.filter(Number).map(Number)
-    return mysql.format(`SELECT recipe_id as id, name, description, recipe_type, recipe_type_id FROM 
-    (
+    return mysql.format(`SELECT 
+      recipe_id as ${recipe.recipe_id_field}, 
+      name AS ${recipe.recipe_name_field}, 
+      description AS ${recipe.recipe_description_field}, 
+      recipe_type AS ${recipe.recipe_type_name_field}, 
+      recipe_type_id AS ${recipe.recipe_type_id_field} 
+    FROM (
       SELECT r.recipe_id, r.Name AS 'name', r.description, rt.Name AS 'recipe_type', rt.recipe_type_id,
         CASE 
         WHEN SUM(

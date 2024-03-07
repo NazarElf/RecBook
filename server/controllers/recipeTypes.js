@@ -1,7 +1,8 @@
 import { connection } from "../sql_connection.js";
+import * as recipeType from '../models/recipeTypeMessage.js'
 
 export const getRecipeTypes = (req, res) => {
-    connection.query("SELECT Recipe_Type_ID as id, name FROM `Recipe_Type`",
+    connection.query(`SELECT Recipe_Type_ID as ${recipeType.recipe_type_id_field}, name AS ${recipeType.recipe_type_name_field} FROM \`Recipe_Type\``,
         function (error, results, fields) {
             if(error)
             {
