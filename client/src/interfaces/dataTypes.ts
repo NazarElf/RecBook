@@ -14,9 +14,8 @@ export interface RecipeDetails extends Recipe {
     cooking_order?: string,
 }
 
-export interface SendRecipe extends Recipe {
-    cooking_order?: string
-    product_ids?: number[]
+export interface SendRecipe extends RecipeDetails {
+    products?: RecipeProduct[]
 }
 
 export interface RecipeType extends Entity {
@@ -29,5 +28,4 @@ export interface Product extends Entity {
 
 export interface RecipeProduct extends Product {
     quantity?: number,
-    unit?: string
 }

@@ -1,30 +1,46 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { Fragment, useEffect, useRef, useState } from 'react'
 import { useLoaderData, useNavigate } from 'react-router-dom'
 import * as api from '../../api/index.ts'
-import type { RecipeDetails as Details } from '../../interfaces/dataTypes.ts'
+import type { RecipeDetails as Details, RecipeProduct } from '../../interfaces/dataTypes.ts'
 import { Col, Row, Button, Container, Spinner, Figure, ButtonGroup, ButtonToolbar } from "react-bootstrap";
 import RecipeRemoveModal from './RecipeRemoveModal.tsx';
 
 export async function loader({ params }) {
-    const { data } = await api.fetchOneRecipe(Number(params.id))
-    return { recipe: data };
+    const { data: recipe } = await api.fetchOneRecipe(Number(params.id))
+    const { data: products } = await api.fetchProductsByRecipe(Number(params.id))
+    return { recipe, products };
 }
 
 const RecipeDetails = () => {
 
-    const { recipe } = useLoaderData() as { recipe: Details }
+    const { recipe, products } = useLoaderData() as { recipe: Details, products: RecipeProduct[] }
     const navigate = useNavigate()
     const text = useRef<HTMLHeadingElement>(null)
     const img = useRef<HTMLImageElement>(null)
     const [width, setWidth] = useState<number | undefined>(0)
     const [loaded, setLoaded] = useState<boolean | undefined>(false)
     const [show, setShow] = useState<boolean>(false)
+    const [recipeOrder, setRecipeOrder] = useState<string[]>([])
 
     const avatar = `https://placekitten.com/g/${400 + Math.round(Math.random() * 200 - 100)}/${400 + Math.round(Math.random() * 200 - 100)}`
 
     useEffect(() => {
         setWidth(text.current?.offsetWidth)
     }, [loaded])
+
+    useEffect(() => {
+
+        if (recipe.cooking_order) {
+            let parseJSON
+            try {
+                parseJSON = JSON.parse(recipe.cooking_order)
+                if (typeof parseJSON === 'string')
+                    setRecipeOrder([parseJSON])
+                setRecipeOrder(parseJSON)
+            }
+            catch (error) { }
+        }
+    }, [recipe])
 
 
     const onRemoveClick = () => {
@@ -33,7 +49,6 @@ const RecipeDetails = () => {
     const onModifyClick = () => {
         navigate(`/recipes/${recipe.id}/modify`)
     }
-
 
 
     return (
@@ -67,7 +82,7 @@ const RecipeDetails = () => {
                             }}>
                                 <Spinner></Spinner>
                             </div>
-                            <Figure.Image src={avatar} ref={img} thumbnail fluid style={{ objectFit: 'cover', visibility: loaded ? 'visible' : 'collapse', position: loaded ? 'relative' : 'absolute', width:'100%' }} onLoad={() => setLoaded(true)} />
+                            <Figure.Image src={avatar} ref={img} thumbnail fluid style={{ objectFit: 'cover', visibility: loaded ? 'visible' : 'collapse', position: loaded ? 'relative' : 'absolute', width: '100%' }} onLoad={() => setLoaded(true)} />
                             {recipe.user_created_id && <Figure.Caption style={{ textAlign: 'right' }}>Created by: Placeholder</Figure.Caption>}
                         </Figure>
                     </Col>
@@ -76,13 +91,30 @@ const RecipeDetails = () => {
                     <Col>{recipe.description}</Col>
                 </Row>
                 <Row className='rounded rounded-3 m-0 p-3 text-light' style={{ backgroundImage: 'linear-gradient(0.25turn, #7b6271, #56454f)' }}>
-                    <Col>
-                        {'some text'}<br />{'some text'}
-                    </Col>
+                    {products.map(product =>
+                        <Col xs={12} md={6} xl={4} key={product.id}>
+                            <div className='d-flex justify-content-between align-items-center'>
+                                <p className='font-monospace lh-1 my-1'>
+                                    {product.name}
+                                </p>
+                                <div className="d-flex justify-content-end align-items-center gap-3">
+                                    <p className="font-monospace lh-1 my-1">
+                                        {product.quantity}
+                                    </p>
+                                    <div className='vr' />
+                                </div>
+                            </div>
+                        </Col>
+                    )}
                 </Row>
                 <Row className='p-3'>
                     <Col>
-                        {recipe.cooking_order}
+                        {recipeOrder?.map((step, index) =>
+                            <Fragment key={index}>
+                                <h4>Step{' '}{index + 1}</h4>
+                                <p>{step}</p>
+                            </Fragment>
+                        )}
                     </Col>
                 </Row>
             </Container>

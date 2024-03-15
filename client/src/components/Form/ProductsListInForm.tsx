@@ -10,6 +10,15 @@ export type ProductsListProps = {
 
 const ProductsList: FC<ProductsListProps> = ({ selectedProducts, setSelectedProducts }) => {
 
+    const handleTextChange = (id?: number) => (e) => {
+        let nextProducts = selectedProducts.map(product => {
+            if (product.id === id) {
+                product.quantity = e.target.value
+            }
+            return product;
+        })
+        setSelectedProducts(nextProducts)
+    }
 
     return (
         <ListGroup>
@@ -18,8 +27,8 @@ const ProductsList: FC<ProductsListProps> = ({ selectedProducts, setSelectedProd
                     <div className="d-flex gap-3 align-items-stretch align-items-md-center justify-content-between m-2 flex-column flex-sm-row">
                         <span className="align-self-center">{product.name}</span>
                         <div className="d-flex gap-3 align-items-center fustify-content-end">
-                            <div className="vr d-none d-sm-block"/>
-                            <Form.Control type="text" size="sm" className="flex-grow-1 flex-shrink-1 w-sm-auto" placeholder="Quantity" maxLength={15}/>
+                            <div className="vr d-none d-sm-block" />
+                            <Form.Control type="text" size="sm" className="flex-grow-1 flex-shrink-1 w-sm-auto" placeholder="Quantity" maxLength={15} value={product.quantity} onChange={ handleTextChange(product.id) } />
                             <Button size="sm" variant="danger" onClick={() => setSelectedProducts(selectedProducts.filter(p => p !== product))}><i className="bi bi-trash-fill"></i></Button>
                         </div>
                     </div>

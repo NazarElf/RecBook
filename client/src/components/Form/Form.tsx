@@ -1,21 +1,27 @@
 //import  from "react";
-import React, { useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Form, FloatingLabel, Button, Row, Col, Spinner, Modal } from 'react-bootstrap';
 
 import type { RecipeDetails, RecipeProduct, SendRecipe } from "../../interfaces/dataTypes.ts";
 import { redirect, useLoaderData, useNavigate, useSubmit, useNavigation } from "react-router-dom";
-import { createRecipe, fetchOneRecipe, updateRecipe } from "../../api/index.ts";
+import { createRecipe, fetchOneRecipe, fetchProductsByRecipe, updateRecipe } from "../../api/index.ts";
 import ProductsSelector from "../Products/ProductsSelector.tsx";
 import ProductsList from "./ProductsListInForm.tsx";
 
+interface LoaderData {
+    recipe: RecipeDetails,
+    products: RecipeProduct[]
+}
+
 export async function loader({ params }) {
     const { data: recipe } = await fetchOneRecipe(params.id)
-    return recipe;
+    const { data: products } = await fetchProductsByRecipe(params.id)
+    return { recipe, products };
 }
 
 export async function action({ request, params }) {
-    const formData = await request.formData();
-    const recipe: RecipeDetails = Object.fromEntries(formData)
+    const formData = await request.json();
+    const recipe: RecipeDetails = (formData)
 
     if (!params.id) {
         const { data: { id } } = await createRecipe(recipe)
@@ -30,10 +36,11 @@ const MyForm = () => {
     const navigate = useNavigate()
     const navigation = useNavigation()
 
-    const data = useLoaderData() as RecipeDetails
+    const { recipe: loadedRecipe, products: loadedProducts } = useLoaderData() as LoaderData || { recipe: undefined, products: [] }
 
-    const [recipe, setRecipe] = useState<RecipeDetails>(data || { name: "", description: "", cooking_order: "", recipe_type_id: 0, products: [] })
-    const [products, setProducts] = useState<RecipeProduct[]>([])
+    const [recipe, setRecipe] = useState<SendRecipe>(loadedRecipe || { name: "", description: "", recipe_type_id: 0, products: [] })
+    const [products, setProducts] = useState<RecipeProduct[]>(loadedProducts)
+    const [cookingStep, setCookingStep] = useState<string[]>([""])
     const [show, setShow] = useState<boolean>(false)
     const [errorShow, setErrorShow] = useState<boolean>(false)
 
@@ -45,10 +52,12 @@ const MyForm = () => {
 
 
         form.checkValidity()
-        if (recipe.name && recipe.description && recipe.cooking_order && recipe.recipe_type_id && recipe.recipe_type_id > 0 && products.length > 0) {
-            let sendRecipe : SendRecipe = { ...recipe, product_ids: products.map(prod => prod.id || 0)}
+        if (recipe.name && recipe.description && recipe.recipe_type_id && recipe.recipe_type_id > 0 && products.length > 0 && products.every(p => p.quantity)) {
+            let prepareProducts = products.map(product => { return { id: product.id, quantity: product.quantity } })
+            let sendRecipe: SendRecipe = { ...recipe, products: prepareProducts, cooking_order: JSON.stringify(cookingStep) }
+            console.log(sendRecipe)
             /* @ts-ignore */
-            submit(sendRecipe, { method: "POST", replace: true })
+            submit(sendRecipe, { method: "POST", replace: true, encType: "application/json" })
         }
         else {
             event.stopPropagation()
@@ -60,6 +69,25 @@ const MyForm = () => {
     const onBack = () => {
         navigate(-1)
     }
+
+    const onTextInput = (index: number) => (event) => {
+        let nextSteps = cookingStep.map((step, i) => {
+            if (i === index)
+                step = event.target.value
+            return step
+        })
+        setCookingStep(nextSteps)
+    }
+
+    useEffect(() => {
+        let insert: any = loadedRecipe?.cooking_order ? JSON.parse(loadedRecipe.cooking_order) : [""];
+
+        if (typeof insert === 'string') {
+            insert = [insert]
+        }
+
+        setCookingStep(insert)
+    }, [loadedRecipe])
 
     return (
         <>
@@ -98,11 +126,17 @@ const MyForm = () => {
                             </div>
                         </Col>
                     </Row>
-                    <FloatingLabel controlId="Cooking_Order" label="Cooking Order" className="mb-3">
-                        <Form.Control as="textarea" placeholder=""
-                            style={{ height: '100px' }} required value={recipe.cooking_order} onInput={(e: React.ChangeEvent<HTMLInputElement>) => { setRecipe({ ...recipe, cooking_order: e.target.value }) }} />
-                        <Form.Control.Feedback type="invalid">Specify Cooking order</Form.Control.Feedback>
-                    </FloatingLabel>
+                    {cookingStep.map((step, index) =>
+                        <Fragment key={index}>
+                            <div className="d-flex align-items-center p-0 mp-3 justify-content-start gap-3">
+                                <h4 className="my-1">Step{' '}{index + 1}</h4>
+                                {!index || <Button variant="outline-danger" size="sm" className="h-100 m-0 btn-block" onClick={() => setCookingStep(cookingStep.filter((v, i) => i !== index))}><i className="bi bi-dash-circle"></i></Button>}
+                            </div>
+                            <Form.Control as='textarea' placeholder="" className="mb-3" onChange={onTextInput(index)} value={step} />
+                        </Fragment>)}
+                    <div className="d-grid mb-3">
+                        <Button onClick={() => setCookingStep([...cookingStep, ''])} disabled={!!!cookingStep.slice(-1)[0]}>Add another one step</Button>
+                    </div>
                     <Row >
                         <Col >
                             <Button variant="primary" type="submit" style={{ width: "100%" }} disabled={navigation.state === 'submitting'}>
@@ -133,12 +167,13 @@ const MyForm = () => {
             <Modal show={errorShow} onHide={() => setErrorShow(false)} backdrop="static" keyboard={false}>
                 <Modal.Header closeButton>Can't create product</Modal.Header>
                 <Modal.Body>Something is missing, make sure you input everything
-                    <br/>Probably you missed one of next inputs:
-                    {!!!recipe.name && <><br/>{'- Recipe Name'}</>}
-                    {!!!recipe.description && <><br/>{'- Recipe Description'}</>}
-                    {!!!recipe.cooking_order && <><br/>{'- Cooking Order'}</>}
-                    {!!!(recipe.recipe_type_id && recipe.recipe_type_id > 0) && <><br/>{'- Recipe Type'}</>}
-                    {!!!(products.length > 0) && <><br/>{'- List of Products'}</>}
+                    <br />Probably you missed one of next inputs:
+                    {!!!recipe.name && <><br />{'- Recipe Name'}</>}
+                    {!!!recipe.description && <><br />{'- Recipe Description'}</>}
+                    {!!!recipe.cooking_order && <><br />{'- Cooking Order'}</>}
+                    {!!!(recipe.recipe_type_id && recipe.recipe_type_id > 0) && <><br />{'- Recipe Type'}</>}
+                    {!!!(products.length > 0) && <><br />{'- List of Products'}</>}
+                    {!!!(products.every(p => p.quantity)) && <><br /> {'- Quantity of one of the products'}</>}
                 </Modal.Body>
                 <Modal.Footer>
                     <Button className="w-100" onClick={() => setErrorShow(false)}>Okay</Button>
