@@ -39,20 +39,22 @@ function parseProductsForOneRecipe(results) {
 export const fetchProductsByRecipe = (req, res) => {
     const { id: _id } = req.params;
     const query =
-        `SELECT 
-        p.product_id AS ${product.product_id_field}, 
-        p.name AS ${product.product_name_field}, 
-        p.type_id AS ${product.product_type_id_field}, 
-        pt.type_name AS ${product.product_type_field}, 
-        rp.quantity AS ${product.product_quantity_field},
-        alt_p.name as ${product.product_alter_field}
-    FROM Recipe AS r 
-    INNER JOIN Recipe_Product AS rp ON r.Recipe_ID = rp.Recipe_ID 
-    LEFT JOIN Product AS p ON rp.Product_ID = p.Product_ID
-    LEFT JOIN Product_Type AS pt ON pt.Type_ID = p.Type_ID
-    LEFT JOIN Product_Alternitives AS pa ON rp.Recipe_Product_ID = pa.Recipe_Product_ID
-    LEFT JOIN Product AS alt_p ON alt_p.Product_ID = pa.Product_ID
-    WHERE r.recipe_id = ?`
+    {
+        sql:
+            `SELECT 
+                p.product_id AS ${product.product_id_field}, 
+                p.name AS ${product.product_name_field}, 
+                p.type_id AS ${product.product_type_id_field}, 
+                pt.type_name AS ${product.product_type_field}, 
+                rp.quantity AS ${product.product_quantity_field},
+                alt_p.name as ${product.product_alter_field}
+            FROM Recipe AS r 
+            INNER JOIN Recipe_Product AS rp ON r.Recipe_ID = rp.Recipe_ID 
+            LEFT JOIN Product AS p ON rp.Product_ID = p.Product_ID
+            LEFT JOIN Product_Type AS pt ON pt.Type_ID = p.Type_ID
+            LEFT JOIN Product_Alternitives AS pa ON rp.Recipe_Product_ID = pa.Recipe_Product_ID
+            LEFT JOIN Product AS alt_p ON alt_p.Product_ID = pa.Product_ID
+            WHERE r.recipe_id = ?`}
     connection.query(query, _id,
         function (error, results, fields) {
             if (error) {
