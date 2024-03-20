@@ -6,6 +6,7 @@ import { connection } from "./sql_connection.js";
 import recipesRoutes from './routes/recipes.js'
 import recipeTypesRoutes from './routes/recipeTypes.js'
 import productsRouter from './routes/products.js'
+import authRouter from './routes/auth.js'
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 
+app.use('/', authRouter)
 app.use('/recipes', recipesRoutes)
 app.use('/recipeTypes', recipeTypesRoutes)
 app.use('/products', productsRouter)

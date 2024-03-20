@@ -25,18 +25,26 @@ export const getRecipes = (req, res) => {
                 console.log(error)
             }
             else {
+                if (!req.user)
+                    results = results.filter(r => r.id !== 1)
                 res.status(200).send(results)
             }
         })
 }
 
+export const checkUser = (req, res, next) => {
+    if (!req.user) {
+        return res.status(403).json({ message: "You must login to perform this action" })
+    }
+    next()
+}
 
 export const createRecipe = async (req, res) => {
-    const recipe = req.body;
-
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    const newRecipe = new Recipe(recipe.name, recipe.description, recipe.cooking_order, recipe.recipe_type_id, recipe.creatorID);
+    const recipe = req.body;
+
+    const newRecipe = new Recipe(recipe.name, recipe.description, recipe.cooking_order, recipe.recipe_type_id, req.user.id);
 
     try {
         connection.beginTransaction(function (err) {
@@ -63,6 +71,18 @@ export const createRecipe = async (req, res) => {
     }
 }
 
+export const checkValidity = async (req, res, next) => {
+    let { id: _id } = req.params;
+    let user_id = (await connection.promise().query(`SELECT user_created_id FROM recipe WHERE recipe_id = ?`, [_id]))[0][0]
+    if(!user_id){
+        return res.status(404).json({message: "Recipe not found"})
+    }
+    if(user_id.user_created_id !== req.user.id)
+    {
+        return res.status(403).json({message: "You must be owner of this recipe to perform this action"})
+    }
+    next()
+}
 
 export const updateRecipe = (req, res) => {
     const { id: _id } = req.params;
