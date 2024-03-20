@@ -1,12 +1,15 @@
-import * as mysql from 'mysql';
+import * as mysql from 'mysql2';
 import * as recipe from './models/recipeMessage.js'
+import * as dotenv from 'dotenv'
+
+dotenv.config()
 
 export const connection = mysql.createConnection({
-    host: "127.0.0.1",
-    user: "crud_user",
-    port:3306,
-    password: "StrongRecBook74_Pass",
-    database: "recbook"
+    host: process.env.SQL_HOST,
+    user: process.env.SQL_USER,
+    port: process.env.SQL_PORT,
+    password: process.env.SQL_PASS,
+    database: process.env.SQL_DB
 })
 
 export const getFilter = (products = [], filters = []) =>
