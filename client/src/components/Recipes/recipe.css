@@ -1,0 +1,47 @@
+button {
+    background-color: transparent;
+    border: 0;
+}
+
+.recipe-card{
+    box-shadow: 0 0 0 transparent;
+    transition: all;
+    transition-duration: 0.15s;
+}
+.recipe-card:hover{
+    transform: scale(102%);
+    box-shadow: 0 0 10px rgba(245, 255, 106, 0.733);
+    transition: all;
+    transition-duration: 0.15s;
+}
+
+.danger-active:active{
+    color: white !important;;
+}
+
+.dropdown-animate {
+    animation-duration: 0.15s;
+    animation-name: animate-fade;
+    animation-fill-mode: both;
+    transition: all;
+    transition-duration: 0.15s;
+}
+
+.animate-in {
+    animation-duration: 0.5s;
+    animation-name: animate-fade;
+    animation-delay: 0.5s;
+    animation-fill-mode: backwards;
+}
+
+@keyframes animate-fade {
+    0% {
+        opacity: 0;
+        transform: translate(0, -2rem);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+}

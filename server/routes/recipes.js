@@ -1,11 +1,14 @@
-import express from 'express'
-import { getRecipes, createRecipe } from '../controllers/recipes.js'
-import { createIngridient } from '../controllers/ingridients.js'
+import express from 'express';
+import { getRecipes, createRecipe, updateRecipe, deleteRecipe, fetchOneRecipe, checkValidity, checkUser } from '../controllers/recipes.js';
 
-const recipesRouter = express.Router();
+const router = express.Router();
 
-recipesRouter.get('/', getRecipes);
-recipesRouter.post('/', createRecipe);
-recipesRouter.post('/create_product', createIngridient)
+router.get('/', getRecipes);
+router.use('/', checkUser)
+router.post('/', createRecipe)
+router.get('/:id', fetchOneRecipe)
+router.use('/:id', checkValidity)
+router.patch('/:id', updateRecipe)
+router.delete('/:id', deleteRecipe)
 
-export default recipesRouter;
+export default router;
